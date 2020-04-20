@@ -22,7 +22,7 @@ namespace Chleking
         /// <param name="title">Название создоваемого окна.</param>
         public OpiGame(int width, int height, string title) : base(width, height, GraphicsMode.Default, title)
         {
-            shader = new Shader("../../shader.vert", "../../shader.frag");
+            shader = new Shader("../../Shaders/shader.vert", "../../Shaders/shader.frag");
         }
 
         protected override void OnLoad(EventArgs e)
