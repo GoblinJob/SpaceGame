@@ -6,14 +6,28 @@ using OpenTK.Input;
 
 namespace Chleking
 {
+    // Объекта буфера вершин.
+    // Массив буфера вершин
+    // Маска буффера.
+
+
     class OpiGame : GameWindow
     {
-        // Шейдер.
+        Triangle triangle;
         Shader shader;
         // Id объекты буфера вершин.
-        int vertexBufferObject;
+        int vertexBufferId;
         // Id объекта массива вершин.
-        int vertexArrayObject;
+        int vertexArrayId;
+
+        /// <summary>
+        /// Координаты вершин треугольника.
+        /// </summary>
+        float[] vertices = {
+            -0.5f, -0.5f, 0.0f,  //Bottom-left vertex
+            0.5f, -0.5f, 0.0f,   //Bottom-right vertex
+            0.0f,  0.5f, 0.0f    //Top vertex
+        };
 
         /// <summary>
         /// </summary>
@@ -23,58 +37,38 @@ namespace Chleking
         public OpiGame(int width, int height, string title) : base(width, height, GraphicsMode.Default, title)
         {
             shader = new Shader("../../Shaders/shader.vert", "../../Shaders/shader.frag");
+            triangle = new Triangle(shader, vertices);
         }
 
         protected override void OnLoad(EventArgs e)
         {
-            vertexBufferObject = GL.GenBuffer();
+            // Назначение цвета заднего фона.
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
-            vertexArrayObject = GL.GenVertexArray();
-            GL.BindVertexArray(vertexArrayObject);
-
-            // 2. copy our vertices array in a buffer for OpenGL to use
-            GL.BindBuffer(BufferTarget.ArrayBuffer, vertexArrayObject);
-            GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StaticDraw);
-
-            // 3. then set our vertex attributes pointers
-            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
-            GL.EnableVertexAttribArray(0);
-
-            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
-            GL.EnableVertexAttribArray(0);
-
-            GL.BindBuffer(BufferTarget.ArrayBuffer, vertexBufferObject);
-            GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StaticDraw);
-
-            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
-            GL.EnableVertexAttribArray(0);
-
-
-            // 3. now draw the object
-            //someOpenGLFunctionThatDrawsOurTriangle();
+            triangle.Load();
 
             base.OnLoad(e);
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
+            // Очистка цветовой маски буффера.
+            // Каждый фрейм выставляется цвет выставленный в ClearColor.
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
-            GL.UseProgram(0);
-            GL.BindVertexArray(vertexArrayObject);
+            triangle.Render();
 
-            shader.Use();
-            GL.BindVertexArray(vertexArrayObject);
-            GL.DrawArrays(PrimitiveType.Triangles, 0, 3);
+            // Смена буффера для двойной буфферизации.
             Context.SwapBuffers();
             base.OnRenderFrame(e);
         }
 
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
+            // Сохраняем нажатую пользователем кнопку.
             KeyboardState input = Keyboard.GetState();
-
+            
+            // Если нажата кнопка ESC, выход из программы.
             if (input.IsKeyDown(Key.Escape))
             {
                 Exit();
@@ -85,21 +79,20 @@ namespace Chleking
 
         protected override void OnResize(EventArgs e)
         {
+            // Изменяет размер отображаемой области.
             GL.Viewport(0, 0, Width, Height);
+
             base.OnResize(e);
         }
-
-        float[] vertices = {
-            -0.5f, -0.5f, 0.0f, //Bottom-left vertex
-            0.5f, -0.5f, 0.0f, //Bottom-right vertex
-            0.0f,  0.5f, 0.0f  //Top vertex
-        };
-
         protected override void OnUnload(EventArgs e)
         {
             shader.Dispose();
+            // ???????????
+            // Ставит выделенную пользователем память для массива буффера в NULL.
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
-            GL.DeleteBuffer(vertexBufferObject);
+            // Удаление выделенного пользователем буффера по id.
+            GL.DeleteBuffer(vertexBufferId);
+
             base.OnUnload(e);
         }
     }

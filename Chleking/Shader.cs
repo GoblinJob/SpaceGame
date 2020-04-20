@@ -10,8 +10,7 @@ namespace Chleking
 {
     class Shader : IDisposable
     {
-        // S.
-        int handle;
+        private int handle;
 
         public Shader(string vertexPath, string fragmentPath)
         {
