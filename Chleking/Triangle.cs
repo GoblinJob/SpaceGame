@@ -7,9 +7,9 @@ using OpenTK.Graphics.OpenGL;
 
 namespace Chleking
 {
-    class Triangle
+    class Triangle : IGraficEntity
     {
-        float[] vertices;
+        private float[] vertices;
         private Shader shader;
 
         // Id объекты буфера вершин.
