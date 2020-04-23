@@ -13,21 +13,7 @@ namespace Chleking
 
     class OpiGame : GameWindow
     {
-        Triangle triangle;
-        Shader shader;
-        // Id объекты буфера вершин.
-        int vertexBufferId;
-        // Id объекта массива вершин.
-        int vertexArrayId;
-
-        /// <summary>
-        /// Координаты вершин треугольника.
-        /// </summary>
-        float[] vertices = {
-            -0.5f, -0.5f, 0.0f,  //Bottom-left vertex
-            0.5f, -0.5f, 0.0f,   //Bottom-right vertex
-            0.0f,  0.5f, 0.0f    //Top vertex
-        };
+        IGraficEntity toShowEntity;
 
         /// <summary>
         /// </summary>
@@ -36,8 +22,8 @@ namespace Chleking
         /// <param name="title">Название создоваемого окна.</param>
         public OpiGame(int width, int height, string title) : base(width, height, GraphicsMode.Default, title)
         {
-            shader = new Shader("../../Shaders/shader.vert", "../../Shaders/shader.frag");
-            triangle = new Triangle(shader, vertices);
+            var shader = new Shader("../../Shaders/shader.vert", "../../Shaders/shader.frag");
+            toShowEntity = new Square(shader);
         }
 
         protected override void OnLoad(EventArgs e)
@@ -45,7 +31,7 @@ namespace Chleking
             // Назначение цвета заднего фона.
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
-            triangle.Load();
+            toShowEntity.Load();
 
             base.OnLoad(e);
         }
@@ -56,7 +42,7 @@ namespace Chleking
             // Каждый фрейм выставляется цвет выставленный в ClearColor.
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
-            triangle.Render();
+            toShowEntity.Render();
 
             // Смена буффера для двойной буфферизации.
             Context.SwapBuffers();
@@ -86,12 +72,7 @@ namespace Chleking
         }
         protected override void OnUnload(EventArgs e)
         {
-            shader.Dispose();
-            // ???????????
-            // Ставит выделенную пользователем память для массива буффера в NULL.
-            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
-            // Удаление выделенного пользователем буффера по id.
-            GL.DeleteBuffer(vertexBufferId);
+            toShowEntity.UnLoad();
 
             base.OnUnload(e);
         }

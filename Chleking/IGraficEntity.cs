@@ -10,5 +10,6 @@ namespace Chleking
     {
         void Load();
         void Render();
+        void UnLoad();
     }
 }
