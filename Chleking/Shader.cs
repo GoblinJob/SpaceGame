@@ -8,7 +8,7 @@ using OpenTK.Input;
 
 namespace Chleking
 {
-    class Shader : IDisposable
+    public class Shader : IDisposable
     {
         private int handle;
 
@@ -37,14 +37,14 @@ namespace Chleking
             GL.CompileShader(vertexShader);
 
             string infoLogVert = GL.GetShaderInfoLog(vertexShader);
-            if (infoLogVert != String.Empty)
+            if (!String.IsNullOrEmpty(infoLogVert))
                 Console.WriteLine(infoLogVert);
 
             GL.CompileShader(fragmentShader);
 
             string infoLogFrag = GL.GetShaderInfoLog(fragmentShader);
 
-            if (infoLogFrag != String.Empty)
+            if (!String.IsNullOrEmpty(infoLogFrag))
                 Console.WriteLine(infoLogFrag);
 
             handle = GL.CreateProgram();

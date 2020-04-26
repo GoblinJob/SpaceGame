@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Chleking
 {
-    class Program
+    public class Program
     {
         [STAThread]
-        static void Main(string[] args)
+        static void Main()
         {
             using (var game = new OpiGame(500, 500, "Chlekin"))
             {

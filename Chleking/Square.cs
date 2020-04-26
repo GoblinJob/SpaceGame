@@ -7,7 +7,7 @@ using OpenTK.Graphics.OpenGL;
 
 namespace Chleking
 {
-    class Square : IGraficEntity
+    public class Square : IGraficEntity
     {
         private uint[] indexes = { 0, 1, 3, 1, 2, 3 };
         private float[] vertices;
@@ -34,7 +34,7 @@ namespace Chleking
             this.vertices = vertices;
         }
 
-        public void Load()
+        public virtual void Load()
         {
             vertexBufferObject = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ArrayBuffer, vertexBufferObject);
@@ -48,13 +48,13 @@ namespace Chleking
             GL.EnableVertexAttribArray(0);
         }
 
-        public void Render()
+        public virtual void Render()
         {
             shader.Use();
             GL.DrawElements(PrimitiveType.Triangles, indexes.Length, DrawElementsType.UnsignedInt, 0);
         }
 
-        public void UnLoad()
+        public virtual void UnLoad()
         {
             shader.Dispose();
             // Ставит выделенную пользователем память для массива буффера в NULL.

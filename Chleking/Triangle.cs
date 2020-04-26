@@ -7,7 +7,7 @@ using OpenTK.Graphics.OpenGL;
 
 namespace Chleking
 {
-    class Triangle : IGraficEntity
+    public class Triangle : IGraficEntity
     {
         private float[] vertices;
         private Shader shader;
@@ -31,7 +31,7 @@ namespace Chleking
             this.vertices = vertices;
         }
 
-        public void Load()
+        public virtual void Load()
         {
             // Инициализация объектов OpenGL.
             vertexBufferObject = GL.GenBuffer();
@@ -45,13 +45,13 @@ namespace Chleking
             GL.EnableVertexAttribArray(0);
         }
 
-        public void Render()
+        public virtual void Render()
         {
             shader.Use();
             GL.DrawArrays(PrimitiveType.Triangles, 0, 3);
         }
 
-        public void UnLoad()
+        public virtual void UnLoad()
         {
             shader.Dispose();
             // Ставит выделенную пользователем память для массива буффера в NULL.

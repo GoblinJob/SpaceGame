@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Chleking
 {
-    interface IGraficEntity
+    public interface IGraficEntity
     {
         void Load();
         void Render();
