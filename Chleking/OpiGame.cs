@@ -23,7 +23,7 @@ namespace Chleking
         public OpiGame(int width, int height, string title) : base(width, height, GraphicsMode.Default, title)
         {
             var shader = new Shader("../../Shaders/shader.vert", "../../Shaders/shader.frag");
-            toShowEntity = new Triangle(shader);
+            toShowEntity = new Square(shader);
         }
 
         protected override void OnLoad(EventArgs e)

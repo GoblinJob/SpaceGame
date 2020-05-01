@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExShader.cs" />
     <Compile Include="IGraficEntity.cs" />
     <Compile Include="ImageReader.cs" />
     <Compile Include="OpiGame.cs" />
@@ -63,7 +64,7 @@
     <Compile Include="Shader.cs" />
     <Compile Include="Square.cs" />
     <Compile Include="Texture.cs" />
-    <Compile Include="TexturedTriangle.cs" />
+    <Compile Include="TexturedCube.cs" />
     <Compile Include="Triangle.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -84,6 +85,9 @@
     <Analyzer Include="..\packages\Microsoft.NetCore.Analyzers.2.9.6\analyzers\dotnet\cs\Microsoft.NetCore.CSharp.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.2.9.6\analyzers\dotnet\cs\Microsoft.NetFramework.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.2.9.6\analyzers\dotnet\cs\Microsoft.NetFramework.CSharp.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\container.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
