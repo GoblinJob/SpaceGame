@@ -11,7 +11,7 @@ namespace Chleking
     // Маска буффера.
 
 
-    public class OpiGame : GameWindow
+    public class Window : GameWindow
     {
         IGraficEntity toShowEntity;
 
@@ -20,7 +20,7 @@ namespace Chleking
         /// <param name="width">Ширина создоваемого окна.</param>
         /// <param name="height">Высота создоваемого окна.</param>
         /// <param name="title">Название создоваемого окна.</param>
-        public OpiGame(int width, int height, string title) : base(width, height, GraphicsMode.Default, title)
+        public Window(int width, int height, string title) : base(width, height, GraphicsMode.Default, title)
         {
             var shader = new Shader("../../Shaders/shader.vert", "../../Shaders/shader.frag");
             toShowEntity = new Square(shader);

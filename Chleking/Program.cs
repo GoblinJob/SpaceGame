@@ -11,7 +11,7 @@ namespace Chleking
         [STAThread]
         static void Main()
         {
-            using (var game = new OpiGame(500, 500, "Chlekin"))
+            using (var game = new Window(500, 500, "Chlekin"))
             {
                 // Запуск программы.
                 game.Run(60.0);
