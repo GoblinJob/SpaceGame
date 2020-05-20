@@ -1,19 +1,14 @@
-﻿using System;
+﻿using OpenTK;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using OpenTK;
 
-namespace Chleking
+namespace SpaceGame.Collisions
 {
     interface ICollisinable
     {
-        Vector3[] vertices { get; }
-    }
-
-    class CollisionSystem
-    {
-        
+        Vector3[] WorldVerticesCoordinate { get; }
     }
 }

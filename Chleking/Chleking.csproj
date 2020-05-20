@@ -55,7 +55,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CollisionSystem.cs" />
+    <Compile Include="Collisions\CollisionSystem.cs" />
+    <Compile Include="Collisions\ICollisinable.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -66,7 +67,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\" />
-    <Folder Include="Collisions\" />
     <Folder Include="Entities\" />
     <Folder Include="Gameplay\" />
     <Folder Include="Visualisation\" />
