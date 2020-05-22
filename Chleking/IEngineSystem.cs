@@ -6,12 +6,8 @@ using System.Threading.Tasks;
 
 namespace Chleking
 {
-    abstract class EngineSystem<T>
+    interface IEngineSystem
     {
-        public abstract void Use();
-        public static EngineSystem Instance()
-        {
-
-        }
+        void Use();
     }
 }

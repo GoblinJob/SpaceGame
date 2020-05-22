@@ -55,18 +55,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collisions\ColliderDistributor.cs" />
+    <Compile Include="Collisions\CollisionCheacker.cs" />
     <Compile Include="Collisions\CollisionSystem.cs" />
     <Compile Include="Core\EngineObject.cs" />
-    <Compile Include="Core\ModuleDistributor.cs" />
-    <Compile Include="Collisions\ObjectModule.cs" />
-    <Compile Include="EngineSystem.cs" />
-    <Compile Include="EngineSystems.cs" />
-    <Compile Include="Render\IRendeable.cs" />
+    <Compile Include="Collisions\Collider.cs" />
+    <Compile Include="Core\Transform.cs" />
+    <Compile Include="IEngineSystem.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Render\IRenderSystem.cs" />
+    <Compile Include="Render\Model.cs" />
+    <Compile Include="Render\ModelDistributor.cs" />
+    <Compile Include="Render\RenderInfo.cs" />
+    <Compile Include="Render\RenderSystem.cs" />
+    <Compile Include="Render\Shader.cs" />
+    <Compile Include="Render\Texture.cs" />
+    <Compile Include="Render\VertexInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </None>
     <None Include="App.config" />
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
