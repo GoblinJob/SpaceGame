@@ -9,19 +9,12 @@ namespace SpaceGame.Collisions
 {
     class CollisionSystem
     {
-        public List<ICollisinable> subscibers = new List<ICollisinable>();
-
-        public void Subscribe(ICollisinable subsciber)
+        public static CollisionSystem Instance { get; }
+        static CollisionSystem()
         {
-
+            Instance = new CollisionSystem();
         }
-
-        public void CheackForCollisions()
-        {
-
-        }
-
-        public void UnSubscribe(ICollisinable subsciber)
+        private CollisionSystem()
         {
 
         }
