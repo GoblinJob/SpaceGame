@@ -1,4 +1,5 @@
-﻿using OpenTK.Graphics.OpenGL4;
+﻿using OpenTK;
+using OpenTK.Graphics.OpenGL4;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,13 +7,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TestGame
+namespace SpaceGame.Render.OpenGL
 {
     /// <summary>
     /// Шейдер загружаймый в OpenGL.
     /// </summary>
-    internal class Shader : IDisposable
+    internal class Shader : IUsableByRender, IDisposable
     {
+        /// <summary>
+        /// Id шейдера в массиве шейдеров OpenGL.
+        /// </summary>
+        public int Id { get; private set; }
+
         public Shader(string vertexPath, string fragmentPath)
         {
             Id = GL.CreateProgram();
@@ -32,11 +38,6 @@ namespace TestGame
             DetachDeleteShader(fragmentShader);
         }
 
-
-        /// <summary>
-        /// Id шейдера в массиве шейдеров OpenGL.
-        /// </summary>
-        public int Id { get; private set; }
 
 
         /// <summary>
@@ -88,6 +89,17 @@ namespace TestGame
         {
             var uniformLocation = GL.GetUniformLocation(Id, name);
             GL.Uniform1(uniformLocation, value);
+        }
+
+        /// <summary>
+        /// Установка значения uniform переменной в шейдере по имени. 
+        /// </summary>
+        /// <param name="name">Имя переменной</param>
+        /// <param name="value">Устонавливаемое значение</param>
+        public void SetValue(string name, Matrix4 value)
+        {
+            var uniformLocation = GL.GetUniformLocation(Id, name);
+            GL.UniformMatrix4(uniformLocation, true, ref value);
         }
 
 

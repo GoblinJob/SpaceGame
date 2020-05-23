@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Chleking.Render
+namespace SpaceGame.Render.OpenGL
 {
-    class VertexInfo
+    interface IUsableByRender
     {
+        void Use();
     }
 }

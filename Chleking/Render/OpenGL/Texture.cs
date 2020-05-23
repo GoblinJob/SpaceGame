@@ -8,13 +8,13 @@ using System.Text;
 using System.Threading.Tasks;
 using PixelFormat = OpenTK.Graphics.OpenGL4.PixelFormat;
 
-namespace TestGame
+namespace SpaceGame.Render.OpenGL
 {
     /// <summary>
     /// Двумерная текстура, взаимодействующая с OpenGL.
     /// Cпособно отображать RGBA цвета.
     /// </summary>
-    public class Texture : IDisposable
+    public class Texture : IUsableByRender, IDisposable
     {
         /// <summary>
         /// Id текстуры в массиве текстур OpenGL.
@@ -58,12 +58,20 @@ namespace TestGame
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
         }
+        /// <summary>
+        /// Привязка текстуры для использования OpenGL.
+        /// </summary>
+        public void Use()
+        {
+            GL.ActiveTexture(TextureUnit.Texture0);
+            GL.BindTexture(TextureTarget.Texture2D, Id);
+        }
 
         /// <summary>
         /// Привязка текстуры для использования OpenGL.
         /// </summary>
         /// <param name="unit">Уровень, где будет использоваться текстура</param>
-        public void Use(TextureUnit unit = TextureUnit.Texture0)
+        public void Use(TextureUnit unit)
         {
             GL.ActiveTexture(unit);
             GL.BindTexture(TextureTarget.Texture2D, Id);
@@ -74,5 +82,6 @@ namespace TestGame
         {
             GL.DeleteTexture(Id);
         }
+
     }
 }

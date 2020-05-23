@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Chleking.Render
+namespace SpaceGame.Render
 {
     class RenderSystem : IEngineSystem
     {

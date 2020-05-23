@@ -1,6 +1,5 @@
-﻿using Chleking.Render;
-using ConsoleApp3;
-using SpaceGame.Collisions;
+﻿using SpaceGame.Collisions;
+using SpaceGame.Render;
 using System;
 using System.Collections.Generic;
 using System.Linq;
