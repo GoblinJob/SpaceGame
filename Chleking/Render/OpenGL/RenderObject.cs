@@ -46,7 +46,7 @@ namespace SpaceGame.Render.OpenGL
             return id;
         }
 
-        public void Draw(Transform transform)
+        public void Draw(Camera viewer, Transform transform)
         {
             GL.BindVertexArray(Id);
             movingShader.Use();
@@ -54,7 +54,7 @@ namespace SpaceGame.Render.OpenGL
 
             var model = Matrix4.Identity * Matrix4.CreateRotationX((float)MathHelper.DegreesToRadians(60));
             var uniformLocationModel = GL.GetUniformLocation(movingShader.Id, "model");
-            _view = Matrix4.CreateTranslation(transform.coordination);
+            _view = Matrix4.CreateTranslation(viewer.Transform.coordination + transform.coordination);
             GL.UniformMatrix4(uniformLocationModel, true, ref model);
 
             movingShader.SetValue("model", model);

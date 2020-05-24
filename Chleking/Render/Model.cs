@@ -10,6 +10,8 @@ namespace SpaceGame.Render
 {
     public class Model
     {
+        public static List<Model> models = new List<Model>();
+
         private RenderObject renderObject;
         public EngineObject Owner { get; private set; }
         public Transform Transform => Owner.Transform;
@@ -18,11 +20,18 @@ namespace SpaceGame.Render
         {
             this.Owner = owner;
             this.renderObject = renderObject;
+            AddModel(this);
         }
 
-        public void Draw()
+        private static void AddModel(Model model)
         {
-            renderObject.Draw(Transform);
+            models.Add(model);
+            models.Sort();
+        }
+
+        public void Draw(Camera camera)
+        {
+            renderObject.Draw(camera, Transform);
         }
     }
 }
