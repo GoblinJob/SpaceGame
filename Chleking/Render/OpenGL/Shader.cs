@@ -12,7 +12,7 @@ namespace SpaceGame.Render.OpenGL
     /// <summary>
     /// Шейдер загружаймый в OpenGL.
     /// </summary>
-    internal class Shader : IUsableByRender, IDisposable
+    public class Shader : IUsableByRender, IDisposable
     {
         /// <summary>
         /// Id шейдера в массиве шейдеров OpenGL.
@@ -33,6 +33,8 @@ namespace SpaceGame.Render.OpenGL
 
             GL.LinkProgram(Id);
             GL.ValidateProgram(Id);
+
+            Use();
 
             DetachDeleteShader(vertexShaderId);
             DetachDeleteShader(fragmentShader);

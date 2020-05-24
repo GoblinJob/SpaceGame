@@ -9,7 +9,7 @@ namespace SpaceGame.Collisions
 {
     class CollisionSystem : IEngineSystem
     {
-        private ColliderDistributor colliders = new ColliderDistributor();
+        public ColliderDistributor Distributor { get; }
         public static CollisionSystem Instance { get; }
         static CollisionSystem()
         {
@@ -17,11 +17,12 @@ namespace SpaceGame.Collisions
         }
         private CollisionSystem()
         {
+            Distributor = new ColliderDistributor();
         }
 
         public void Use()
         {
-            foreach(var collider in colliders)
+            foreach(var collider in Distributor)
             {
                 var collisedColliders = CollisionChecker.Check(collider);
                 collider.SetIsCollised(collisedColliders);

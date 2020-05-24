@@ -10,7 +10,7 @@ namespace SpaceGame.Core
 {
     public class EngineObject
     {
-        public Transform Transform { get; private set; } 
+        public Transform Transform { get; set; } 
         public Collider Collider { get; set; }
         public Model Model { get; set; }
     }

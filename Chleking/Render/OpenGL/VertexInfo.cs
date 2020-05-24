@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace SpaceGame.Render.OpenGL
 {
-    class VertexInfo : IUsableByRender, IDisposable
+    public class VertexInfo : IUsableByRender, IDisposable
     {
         public const int RowSize = 5;
         public int Id { get; private set; }
-        public int VertexCount { get; private set; }
+        public int VertexCount => ElementCount / 5;
         public int ElementCount { get; private set; }
         public int ElementsSize => ElementCount * sizeof(float);
 
@@ -30,13 +30,24 @@ namespace SpaceGame.Render.OpenGL
                 // TODO: Проверить, как это работает !!!
                 GL.DeleteBuffer(Id);
                 GL.BindBuffer(BufferTarget.ArrayBuffer, Id);
-                Initialize(value);
+                Id = InitializeDataOpenGL(value);
+
+                throw new Exception("Никита пошел поссать эксепшион");
             }
         }
+
+        public VertexInfo(float[] verticesInfo)
+        {
+            ElementCount = verticesInfo.Length;
+            Id = InitializeDataOpenGL(verticesInfo);
+        }
+
         public VertexInfo(float[] vertices, float[] textCoord)
         {
+            ElementCount = vertices.Length + textCoord.Length;
             var verticesInfo = CreateVerticesInfo(vertices, textCoord);
-            Initialize(verticesInfo);
+
+            Id = InitializeDataOpenGL(verticesInfo);
         }
 
 
@@ -49,13 +60,6 @@ namespace SpaceGame.Render.OpenGL
             GL.DeleteBuffer(Id);
         }
 
-        private void Initialize(float[] verticesInfo)
-        {
-            ElementCount = verticesInfo.Length;
-            VertexCount = verticesInfo.Length / RowSize;
-            Id = InitializeDataOpenGL(verticesInfo);
-        }
-
         private int InitializeDataOpenGL(float[] verticesInfo)
         {
             int id = GL.GenBuffer();
@@ -66,7 +70,7 @@ namespace SpaceGame.Render.OpenGL
 
         private float[] CreateVerticesInfo(float[] vertices, float[] textCoord)
         {
-            if (IsVertexInfoFormat(vertices, textCoord))
+            if (!IsVertexInfoFormat(vertices, textCoord))
                 // TODO: Создать класс исключения.
                 throw new Exception("Arrays in not in required format.");
                     
@@ -74,13 +78,12 @@ namespace SpaceGame.Render.OpenGL
 
             for (int vertexIndex = 0; vertexIndex < VertexCount; vertexIndex++)
             {
-                result[vertexIndex] = vertices[vertexIndex * 3];
-                result[vertexIndex + 1] = vertices[vertexIndex * 3 + 1];
-                result[vertexIndex + 2] = vertices[vertexIndex * 3 + 2];
-                result[vertexIndex + 3] = textCoord[vertexIndex * 2];
-                result[vertexIndex + 4] = textCoord[vertexIndex * 2 + 1];
+                result[vertexIndex * RowSize] = vertices[vertexIndex * 3];
+                result[vertexIndex * RowSize + 1] = vertices[vertexIndex * 3 + 1];
+                result[vertexIndex * RowSize + 2] = vertices[vertexIndex * 3 + 2];
+                result[vertexIndex * RowSize + 3] = textCoord[vertexIndex * 2];
+                result[vertexIndex * RowSize + 4] = textCoord[vertexIndex * 2 + 1];
             }
-
             return result;
         }
 

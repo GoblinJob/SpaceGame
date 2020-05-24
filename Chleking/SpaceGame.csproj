@@ -64,12 +64,15 @@
     <Compile Include="IEngineSystem.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Render\Model.cs" />
     <Compile Include="Render\OpenGL\IRenderable.cs" />
+    <Compile Include="Render\OpenGL\ModelDistributor.cs" />
     <Compile Include="Render\OpenGL\RenderObject.cs" />
     <Compile Include="Render\RenderSystem.cs" />
     <Compile Include="Render\OpenGL\Shader.cs" />
     <Compile Include="Render\OpenGL\Texture.cs" />
     <Compile Include="Render\OpenGL\VertexInfo.cs" />
+    <Compile Include="Window.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.editorconfig">

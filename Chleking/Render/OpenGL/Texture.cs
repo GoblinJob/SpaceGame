@@ -1,4 +1,5 @@
-﻿using OpenTK.Graphics.OpenGL4;
+﻿
+using OpenTK.Graphics.OpenGL4;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -42,10 +43,10 @@ namespace SpaceGame.Render.OpenGL
 
             // Установка параметров наложения текстуры.
             SetTextureParameters();
-
             // Создаем для тектуры "пресеты меньшего размера" для
             // более правильного отображения в далеке и оптимизации.
             GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+            Use();
         }
         /// <summary>
         /// Устанавливает параметры наложения текстуры.

@@ -9,17 +9,20 @@ using System.Threading.Tasks;
 
 namespace SpaceGame.Render.OpenGL
 {
-    class RenderObject : IDisposable
+    public class RenderObject : IDisposable
     {
         public int Id { get; private set; }
         private VertexInfo vertexInfo;
         private Shader movingShader;
         private Texture texture;
 
+        Matrix4 _view;
+        Matrix4 _projection;
+
         public RenderObject(VertexInfo vertexInfo, Texture texture)
         {
             this.vertexInfo = vertexInfo;
-            this.movingShader = new Shader(@"../../Render/OpenGL/Shader/Transform.vert", @"../../Render/OpenGL/Shader/TextureOverlay.frag");
+            this.movingShader = new Shader(@"../../Render/OpenGL/Shaders/Transform.vert", @"../../Render/OpenGL/Shaders/TextureOverlay.frag");
             this.texture = texture;
             Id = InitializeOpenGL();
         }
@@ -30,9 +33,16 @@ namespace SpaceGame.Render.OpenGL
             GL.BindVertexArray(id);
             vertexInfo.Use();
 
-            // TODO : сделать методы для получения размеров экрана.
-            var projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(45.0f), 1000 / 800, 0.1f, 100.0f);
-            movingShader.SetValue("projection", projection);
+            // Инициализация значений позиции.
+            //var positionLocation = movingShader.GetAttribLocation("Position");
+            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
+            GL.EnableVertexAttribArray(0);
+
+            // Инициализация значений координат текстур.
+            //var texCoordLocation = movingShader.GetAttribLocation("TexCoord");
+            GL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
+            GL.EnableVertexAttribArray(1);
+            _projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(45.0f), (float)800 / (float)600, 0.1f, 100.0f);
             return id;
         }
 
@@ -42,13 +52,15 @@ namespace SpaceGame.Render.OpenGL
             movingShader.Use();
             texture.Use();
 
-            Matrix4 view = Matrix4.CreateTranslation(transform.coordination);
-            movingShader.SetValue("view", view);
+            var model = Matrix4.Identity * Matrix4.CreateRotationX((float)MathHelper.DegreesToRadians(60));
+            var uniformLocationModel = GL.GetUniformLocation(movingShader.Id, "model");
+            _view = Matrix4.CreateTranslation(transform.coordination);
+            GL.UniformMatrix4(uniformLocationModel, true, ref model);
 
-            Matrix4 model = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(transform.rotation.Z)) *
-                Matrix4.CreateRotationY(MathHelper.DegreesToRadians(transform.rotation.Y)) *
-                Matrix4.CreateRotationX(MathHelper.DegreesToRadians(transform.rotation.X));
             movingShader.SetValue("model", model);
+            movingShader.SetValue("view", _view);
+            movingShader.SetValue("projection", _projection);
+
 
             GL.DrawArrays(PrimitiveType.Triangles, 0, vertexInfo.VertexCount);
         }
