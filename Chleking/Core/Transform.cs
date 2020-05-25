@@ -9,7 +9,13 @@ namespace SpaceGame.Core
 {
     public class Transform
     {
-        public Vector3 coordination;
+        public Transform()
+        {
+            location = Vector3.Zero;
+            rotation = Quaternion.Identity;
+            scale = Vector3.One;
+        }
+        public Vector3 location;
         public Quaternion rotation;
         public Vector3 scale;
     }

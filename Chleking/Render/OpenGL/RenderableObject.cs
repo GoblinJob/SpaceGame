@@ -9,20 +9,31 @@ using System.Threading.Tasks;
 
 namespace SpaceGame.Render.OpenGL
 {
-    public class RenderObject : IDisposable
+    public class RenderableObject : IDisposable
     {
+        private static List<RenderableObject> existRenderableObjects = new List<RenderableObject>();
+
         public int Id { get; private set; }
-        private VertexInfo vertexInfo;
+        private Model vertexInfo;
         private Shader movingShader;
         private Texture texture;
 
-        Matrix4 _view;
-        Matrix4 _projection;
+        private RenderableObject()
+        {
+        }
 
-        public RenderObject(VertexInfo vertexInfo, Texture texture)
+        public static RenderableObject Create(Model vertexInfo, Texture texture)
+        {
+            var alreadyExistRenderableObject = existRenderableObjects.Find(item => vertexInfo == item.vertexInfo  && texture == item.texture);
+            if (alreadyExistRenderableObject != null) return alreadyExistRenderableObject;
+
+            return new RenderableObject(vertexInfo, texture);
+        }
+
+        private RenderableObject(Model vertexInfo, Texture texture)
         {
             this.vertexInfo = vertexInfo;
-            this.movingShader = new Shader(@"../../Render/OpenGL/Shaders/Transform.vert", @"../../Render/OpenGL/Shaders/TextureOverlay.frag");
+            this.movingShader = Shader.GetShader("0");
             this.texture = texture;
             Id = InitializeOpenGL();
         }
@@ -42,7 +53,6 @@ namespace SpaceGame.Render.OpenGL
             //var texCoordLocation = movingShader.GetAttribLocation("TexCoord");
             GL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
             GL.EnableVertexAttribArray(1);
-            _projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(45.0f), (float)800 / (float)600, 0.1f, 100.0f);
             return id;
         }
 
@@ -52,15 +62,10 @@ namespace SpaceGame.Render.OpenGL
             movingShader.Use();
             texture.Use();
 
-            var model = Matrix4.Identity * Matrix4.CreateRotationX((float)MathHelper.DegreesToRadians(60));
-            var uniformLocationModel = GL.GetUniformLocation(movingShader.Id, "model");
-            _view = Matrix4.CreateTranslation(viewer.Transform.coordination + transform.coordination);
-            GL.UniformMatrix4(uniformLocationModel, true, ref model);
-
-            movingShader.SetValue("model", model);
-            movingShader.SetValue("view", _view);
-            movingShader.SetValue("projection", _projection);
-
+            movingShader.SetValue("position", transform.location + viewer.Transform.location);
+            movingShader.SetValue("rotation", transform.rotation.Xyz);
+            movingShader.SetValue("scale", transform.scale);
+            movingShader.SetValue("projection", viewer.ViewMatrix);
 
             GL.DrawArrays(PrimitiveType.Triangles, 0, vertexInfo.VertexCount);
         }

@@ -8,25 +8,19 @@ using System.Threading.Tasks;
 
 namespace SpaceGame.Render
 {
-    public class Model
+    public class Render3D
     {
-        public static List<Model> models = new List<Model>();
+        public static List<Render3D> AllRenders { get; private set; } = new List<Render3D>();
 
-        private RenderObject renderObject;
+        private RenderableObject renderObject;
         public EngineObject Owner { get; private set; }
         public Transform Transform => Owner.Transform;
 
-        public Model(RenderObject renderObject, EngineObject owner)
+        public Render3D(string modelName, string textureName, EngineObject owner)
         {
             this.Owner = owner;
-            this.renderObject = renderObject;
-            AddModel(this);
-        }
-
-        private static void AddModel(Model model)
-        {
-            models.Add(model);
-            models.Sort();
+            this.renderObject = RenderableObject.Create(Model.GetModel(modelName), Texture.GetTexture(textureName));
+            AllRenders.Add(this);
         }
 
         public void Draw(Camera camera)

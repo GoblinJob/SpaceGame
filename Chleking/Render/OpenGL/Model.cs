@@ -8,8 +8,10 @@ using System.Threading.Tasks;
 
 namespace SpaceGame.Render.OpenGL
 {
-    public class VertexInfo : IUsableByRender, IDisposable
+    public class Model : IUsableByRender, IDisposable
     {
+        private static Dictionary<string, Model> dictionaryOfModels = new Dictionary<string, Model>();
+
         public const int RowSize = 5;
         public int Id { get; private set; }
         public int VertexCount => ElementCount / 5;
@@ -36,18 +38,32 @@ namespace SpaceGame.Render.OpenGL
             }
         }
 
-        public VertexInfo(float[] verticesInfo)
+        private Model()
         {
-            ElementCount = verticesInfo.Length;
+        }
+
+
+        private Model(float[] verticesInfo)
+        {
+            ElementCount = verticesInfo.Length ;
             Id = InitializeDataOpenGL(verticesInfo);
         }
 
-        public VertexInfo(float[] vertices, float[] textCoord)
-        {
-            ElementCount = vertices.Length + textCoord.Length;
-            var verticesInfo = CreateVerticesInfo(vertices, textCoord);
 
-            Id = InitializeDataOpenGL(verticesInfo);
+        public static Model GetModel(string name)
+        {
+            return dictionaryOfModels[name];
+        }
+        public static void CreateModel(string name, float[] vertices, float[] textCoord)
+        {
+            var model = new Model(CreateVerticesInfo(vertices, textCoord, vertices.Length + textCoord.Length));
+            dictionaryOfModels.Add(name, model);
+        }
+
+        public static void CreateModel(string name, float[] verticeInfo)
+        {
+            var model = new Model(verticeInfo);
+            dictionaryOfModels.Add(name, model);
         }
 
 
@@ -68,15 +84,15 @@ namespace SpaceGame.Render.OpenGL
             return id;
         }
 
-        private float[] CreateVerticesInfo(float[] vertices, float[] textCoord)
+        private static float[] CreateVerticesInfo(float[] vertices, float[] textCoord, int elementCount)
         {
             if (!IsVertexInfoFormat(vertices, textCoord))
                 // TODO: Создать класс исключения.
                 throw new Exception("Arrays in not in required format.");
                     
-            float[] result = new float[ElementCount];
+            float[] result = new float[elementCount];
 
-            for (int vertexIndex = 0; vertexIndex < VertexCount; vertexIndex++)
+            for (int vertexIndex = 0; vertexIndex < elementCount / RowSize; vertexIndex++)
             {
                 result[vertexIndex * RowSize] = vertices[vertexIndex * 3];
                 result[vertexIndex * RowSize + 1] = vertices[vertexIndex * 3 + 1];
@@ -87,7 +103,7 @@ namespace SpaceGame.Render.OpenGL
             return result;
         }
 
-        private bool IsVertexInfoFormat(float[] vertices, float[] textCoord)
+        private static bool IsVertexInfoFormat(float[] vertices, float[] textCoord)
         {
             return vertices.Length / 3 == textCoord.Length / 2;
         }

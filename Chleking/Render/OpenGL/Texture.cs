@@ -17,11 +17,27 @@ namespace SpaceGame.Render.OpenGL
     /// </summary>
     public class Texture : IUsableByRender, IDisposable
     {
+        private static Dictionary<string, Texture> dictionaryOfTextures = new Dictionary<string, Texture>();
+
+        public static Texture GetTexture(string name)
+        {
+            return dictionaryOfTextures[name];
+        }
+        public static void CreateTexture(string name, string imagePath)
+        {
+            var model = new Texture(imagePath);
+            dictionaryOfTextures.Add(name, model);
+        }
+
+
         /// <summary>
         /// Id текстуры в массиве текстур OpenGL.
         /// </summary>
         public int Id { get; private set; }
-        public Texture(string imagePath)
+        private Texture()
+        {
+        }
+        private Texture(string imagePath)
         {
             // Создаем текстуру в памяти OpenGL.
             Id = GL.GenTexture();

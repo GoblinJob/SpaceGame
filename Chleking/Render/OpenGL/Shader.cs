@@ -14,12 +14,29 @@ namespace SpaceGame.Render.OpenGL
     /// </summary>
     public class Shader : IUsableByRender, IDisposable
     {
+        private static Dictionary<string, Shader> dictionaryOfShaders = new Dictionary<string, Shader>();
+
+        public static Shader GetShader(string name)
+        {
+            return dictionaryOfShaders[name];
+        }
+        public static void CreateShader(string name, string vertexPath, string fragmentPath)
+        {
+            var model = new Shader(vertexPath, fragmentPath);
+            dictionaryOfShaders.Add(name, model);
+        }
+
+
         /// <summary>
         /// Id шейдера в массиве шейдеров OpenGL.
         /// </summary>
         public int Id { get; private set; }
 
-        public Shader(string vertexPath, string fragmentPath)
+        private Shader()
+        {
+        }
+
+        private Shader(string vertexPath, string fragmentPath)
         {
             Id = GL.CreateProgram();
 
@@ -91,6 +108,17 @@ namespace SpaceGame.Render.OpenGL
         {
             var uniformLocation = GL.GetUniformLocation(Id, name);
             GL.Uniform1(uniformLocation, value);
+        }
+
+        /// <summary>
+        /// Установка значения uniform переменной в шейдере по имени. 
+        /// </summary>
+        /// <param name="name">Имя переменной</param>
+        /// <param name="value">Устонавливаемое значение</param>
+        public void SetValue(string name, Vector3 value)
+        {
+            var uniformLocation = GL.GetUniformLocation(Id, name);
+            GL.Uniform3(uniformLocation, value);
         }
 
         /// <summary>

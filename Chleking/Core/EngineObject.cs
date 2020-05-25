@@ -12,6 +12,6 @@ namespace SpaceGame.Core
     {
         public Transform Transform { get; set; } 
         public Collider Collider { get; set; }
-        public Model Model { get; set; }
+        public Render3D Model { get; set; }
     }
 }

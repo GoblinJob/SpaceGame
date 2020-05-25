@@ -18,7 +18,7 @@ namespace SpaceGame.Render
         public int ViewHeight { get; set; }
         public int ViewWidth { get; set; }
 
-        public Matrix4 ViewMatrix => Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(Fov), ViewHeight / ViewWidth, 0.1f, 100.0f);
+        public Matrix4 ViewMatrix => Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(Fov), ((float)ViewHeight) / ViewWidth, 0.1f, 100.0f);
 
         public Camera(float fov, float viewRange, int viewHeight, int viewWidthl)
         {
@@ -29,9 +29,9 @@ namespace SpaceGame.Render
             Transform = new Transform();
         }
 
-        public Model[] GetModelsInView()
+        public Render3D[] GetModelsInView()
         {
-            Model.models.Sort((Model model1, Model model2) =>
+            Render3D.AllRenders.Sort((Render3D model1, Render3D model2) =>
             {
                 if (DistanceSearch(model1, Transform) > DistanceSearch(model2, Transform)) return 1;
                 else if (DistanceSearch(model1, Transform) < DistanceSearch(model2, Transform)) return -1;
@@ -40,19 +40,19 @@ namespace SpaceGame.Render
 
             return null;
         }
-        private float DistanceSearch(Model model, Transform transform)
+        private float DistanceSearch(Render3D model, Transform transform)
         {
-            float distanceToObject = (float)Math.Sqrt(Math.Pow(model.Transform.coordination.X - transform.coordination.X, 2) +
-                Math.Pow(model.Transform.coordination.Y - transform.coordination.Y, 2) +
-                Math.Pow(model.Transform.coordination.Z - transform.coordination.Z, 2));
+            float distanceToObject = (float)Math.Sqrt(Math.Pow(model.Transform.location.X - transform.location.X, 2) +
+                Math.Pow(model.Transform.location.Y - transform.location.Y, 2) +
+                Math.Pow(model.Transform.location.Z - transform.location.Z, 2));
 
             return distanceToObject;
         }
 
         public void ShowAllInView()
         {
-            var models = GetModelsInView();
-            for (int i = 0; i < models.Length; i++)
+            var models = Render3D.AllRenders;
+            for (int i = 0; i < models.Count; i++)
             {
                 models[i].Draw(this);
             }
