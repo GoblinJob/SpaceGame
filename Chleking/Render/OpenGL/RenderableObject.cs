@@ -56,16 +56,23 @@ namespace SpaceGame.Render.OpenGL
             return id;
         }
 
+        private void SetTransformValues(Camera viewer, Transform transform)
+        {
+            movingShader.SetMatrix4("view", Matrix4.CreateTranslation(transform.location + viewer.Transform.location));
+            movingShader.SetMatrix4("model", Matrix4.CreateRotationZ(transform.rotation.Z) *
+                Matrix4.CreateRotationY(transform.rotation.Y) *
+                Matrix4.CreateRotationX(transform.rotation.X));
+            movingShader.SetMatrix4("projection", viewer.Projection);
+            movingShader.SetVector3("scale", transform.scale);
+        }
+
         public void Draw(Camera viewer, Transform transform)
         {
             GL.BindVertexArray(Id);
             movingShader.Use();
             texture.Use();
 
-            movingShader.SetValue("position", transform.location + viewer.Transform.location);
-            movingShader.SetValue("rotation", transform.rotation.Xyz);
-            movingShader.SetValue("scale", transform.scale);
-            movingShader.SetValue("projection", viewer.ViewMatrix);
+            SetTransformValues(viewer, transform);
 
             GL.DrawArrays(PrimitiveType.Triangles, 0, vertexInfo.VertexCount);
         }

@@ -115,7 +115,7 @@ namespace SpaceGame.Render.OpenGL
         /// </summary>
         /// <param name="name">Имя переменной</param>
         /// <param name="value">Устонавливаемое значение</param>
-        public void SetValue(string name, Vector3 value)
+        public void SetVector3(string name, Vector3 value)
         {
             var uniformLocation = GL.GetUniformLocation(Id, name);
             GL.Uniform3(uniformLocation, value);
@@ -126,7 +126,7 @@ namespace SpaceGame.Render.OpenGL
         /// </summary>
         /// <param name="name">Имя переменной</param>
         /// <param name="value">Устонавливаемое значение</param>
-        public void SetValue(string name, Matrix4 value)
+        public void SetMatrix4(string name, Matrix4 value)
         {
             var uniformLocation = GL.GetUniformLocation(Id, name);
             GL.UniformMatrix4(uniformLocation, true, ref value);

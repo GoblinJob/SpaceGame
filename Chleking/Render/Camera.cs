@@ -12,21 +12,63 @@ namespace SpaceGame.Render
 {
     public class Camera
     {
+        private float fov;
+        public float viewRange;
+        public int viewHeight;
+        public int viewWidth;
         public Transform Transform { get; set; }
-        public float Fov { get; set; }
-        public float ViewRange { get; set; }
-        public int ViewHeight { get; set; }
-        public int ViewWidth { get; set; }
+        public float Fov
+        {
+            get => fov;
+            set
+            {
+                fov = value;
+                UpdateProjection();
+            }
+        }
+        public float ViewRange
+        {
+            get => viewRange;
+            set
+            {
+                viewRange = value;
+                UpdateProjection();
+            }
+        }
+        public int ViewHeight
+        {
+            get => viewHeight;
+            set
+            {
+                viewRange = value;
+                UpdateProjection();
+            }
+        }
+        public int ViewWidth
+        {
+            get => viewWidth;
+            set
+            {
+                viewRange = value;
+                UpdateProjection();
+            }
+        }
 
-        public Matrix4 ViewMatrix => Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(Fov), ((float)ViewHeight) / ViewWidth, 0.1f, 100.0f);
+        public Matrix4 Projection { get; private set; }
 
         public Camera(float fov, float viewRange, int viewHeight, int viewWidthl)
         {
-            this.Fov = fov;
-            this.ViewRange = viewRange;
-            this.ViewHeight = viewHeight;
-            this.ViewWidth = viewWidthl;
             Transform = new Transform();
+            this.fov = fov;
+            this.viewRange = viewRange;
+            this.viewHeight = viewHeight;
+            this.viewWidth = viewWidthl;
+            UpdateProjection();
+        }
+
+        private void UpdateProjection()
+        {
+            Projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(Fov), ((float)ViewHeight) / ViewWidth, 0.1f, ViewRange);
         }
 
         public Render3D[] GetModelsInView()
