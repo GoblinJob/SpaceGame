@@ -56,9 +56,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collisions\ColliderDistributor.cs" />
-    <Compile Include="Collisions\CollisionCheacker.cs" />
+    <Compile Include="Collisions\CollisionChecker.cs" />
     <Compile Include="Collisions\CollisionSystem.cs" />
-    <Compile Include="Core\EngineObject.cs" />
+    <Compile Include="Core\GameObject.cs" />
     <Compile Include="Collisions\Collider.cs" />
     <Compile Include="Core\Transform.cs" />
     <Compile Include="Gameplay\Meteor.cs" />

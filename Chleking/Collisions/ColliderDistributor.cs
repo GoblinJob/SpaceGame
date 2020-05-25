@@ -13,7 +13,7 @@ namespace SpaceGame.Collisions
     {
         private List<Collider> colliders = new List<Collider>();
 
-        public Collider CreateCollider(Vector3[] vertices, EngineObject owner)
+        public Collider CreateCollider(Vector3[] vertices, GameObject owner)
         {
             var collider = new Collider(vertices, owner);
             colliders.Add(collider);

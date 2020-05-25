@@ -13,22 +13,45 @@ namespace SpaceGame.Render.OpenGL
     {
         private static List<RenderableObject> existRenderableObjects = new List<RenderableObject>();
 
-        public int Id { get; private set; }
-        private Model vertexInfo;
-        private Shader movingShader;
-        private Texture texture;
+
+        public static RenderableObject Create(Model vertexInfo, Texture texture)
+        {
+            var alreadyExistRenderableObject = existRenderableObjects.Find(item => vertexInfo == item.vertexInfo && texture == item.texture);
+            if (alreadyExistRenderableObject != null) return alreadyExistRenderableObject;
+
+            return new RenderableObject(vertexInfo, texture);
+        }
+
 
         private RenderableObject()
         {
         }
 
-        public static RenderableObject Create(Model vertexInfo, Texture texture)
-        {
-            var alreadyExistRenderableObject = existRenderableObjects.Find(item => vertexInfo == item.vertexInfo  && texture == item.texture);
-            if (alreadyExistRenderableObject != null) return alreadyExistRenderableObject;
 
-            return new RenderableObject(vertexInfo, texture);
+        private Model vertexInfo;
+        private Shader movingShader;
+        private Texture texture;
+
+
+        public int Id { get; private set; }
+
+
+        public void Draw(Camera viewer, Transform transform)
+        {
+            GL.BindVertexArray(Id);
+            movingShader.Use();
+            texture.Use();
+
+            SetTransformValues(viewer, transform);
+
+            GL.DrawArrays(PrimitiveType.Triangles, 0, vertexInfo.VertexCount);
         }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
+        }
+
 
         private RenderableObject(Model vertexInfo, Texture texture)
         {
@@ -66,20 +89,5 @@ namespace SpaceGame.Render.OpenGL
             movingShader.SetVector3("scale", transform.scale);
         }
 
-        public void Draw(Camera viewer, Transform transform)
-        {
-            GL.BindVertexArray(Id);
-            movingShader.Use();
-            texture.Use();
-
-            SetTransformValues(viewer, transform);
-
-            GL.DrawArrays(PrimitiveType.Triangles, 0, vertexInfo.VertexCount);
-        }
-
-        public void Dispose()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

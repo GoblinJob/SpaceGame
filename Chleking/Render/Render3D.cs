@@ -12,16 +12,23 @@ namespace SpaceGame.Render
     {
         public static List<Render3D> AllRenders { get; private set; } = new List<Render3D>();
 
-        private RenderableObject renderObject;
-        public EngineObject Owner { get; private set; }
-        public Transform Transform => Owner.Transform;
 
-        public Render3D(string modelName, string textureName, EngineObject owner)
+        public Render3D(string modelName, string textureName, GameObject owner)
         {
             this.Owner = owner;
             this.renderObject = RenderableObject.Create(Model.GetModel(modelName), Texture.GetTexture(textureName));
             AllRenders.Add(this);
         }
+
+
+        public GameObject Owner { get; private set; }
+
+
+        public Transform Transform => Owner.Transform;
+
+
+        private RenderableObject renderObject;
+
 
         public void Draw(Camera camera)
         {

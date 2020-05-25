@@ -23,6 +23,8 @@ namespace SpaceGame.Render.OpenGL
         {
             return dictionaryOfTextures[name];
         }
+
+
         public static void CreateTexture(string name, string imagePath)
         {
             var model = new Texture(imagePath);
@@ -30,13 +32,11 @@ namespace SpaceGame.Render.OpenGL
         }
 
 
-        /// <summary>
-        /// Id текстуры в массиве текстур OpenGL.
-        /// </summary>
-        public int Id { get; private set; }
         private Texture()
         {
         }
+
+
         private Texture(string imagePath)
         {
             // Создаем текстуру в памяти OpenGL.
@@ -64,17 +64,14 @@ namespace SpaceGame.Render.OpenGL
             GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
             Use();
         }
-        /// <summary>
-        /// Устанавливает параметры наложения текстуры.
-        /// </summary>
-        protected virtual void SetTextureParameters()
-        {
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
 
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
-        }
+
+        /// <summary>
+        /// Id текстуры в массиве текстур OpenGL.
+        /// </summary>
+        public int Id { get; private set; }
+
+
         /// <summary>
         /// Привязка текстуры для использования OpenGL.
         /// </summary>
@@ -98,6 +95,19 @@ namespace SpaceGame.Render.OpenGL
         public void Dispose()
         {
             GL.DeleteTexture(Id);
+        }
+
+
+        /// <summary>
+        /// Устанавливает параметры наложения текстуры.
+        /// </summary>
+        protected virtual void SetTextureParameters()
+        {
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
         }
 
     }

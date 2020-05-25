@@ -9,16 +9,23 @@ namespace SpaceGame.Collisions
 {
     class CollisionSystem : IEngineSystem
     {
-        public ColliderDistributor Distributor { get; }
-        public static CollisionSystem Instance { get; }
         static CollisionSystem()
         {
             Instance = new CollisionSystem();
         }
+
+
+        public static CollisionSystem Instance { get; }
+
+
         private CollisionSystem()
         {
             Distributor = new ColliderDistributor();
         }
+
+
+        public ColliderDistributor Distributor { get; }
+
 
         public void Use()
         {

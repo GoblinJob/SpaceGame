@@ -11,6 +11,19 @@ namespace SpaceGame
 {
     public class Window : GameWindow
     {
+        public static Matrix4 Projection;
+
+
+        public Window(int width, int hight, string title) : base(width, hight, GraphicsMode.Default, title)
+        {
+        }
+
+
+        private Camera camera;
+        private GameObject[] engineObjects;
+        private int id2;
+
+
         private readonly float[] vertices = new float[] {
              // Позиции вершин  
     -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -56,43 +69,6 @@ namespace SpaceGame
     -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
         };
 
-        private EngineObject[] CreateRandomCoolCubes(string textureName, string modelName, int count, int minSpawnCoordZ, int maxSpawnCoordZ)
-        {
-            var random = new Random();
-            var resault = new EngineObject[count];
-            for (int i = 0; i < count; i++)
-            {
-                var randomTransform = new Transform();
-
-                randomTransform.location.X = (float)random.NextDouble() + random.Next(-50, 50);
-                randomTransform.location.Y = (float)random.NextDouble() + random.Next(-50, 50);
-                randomTransform.location.Z = (float)random.NextDouble() + random.Next(minSpawnCoordZ, maxSpawnCoordZ);
-
-                randomTransform.rotation.X = (float)random.Next(0, 360);
-                randomTransform.rotation.Y = (float)random.Next(0, 360);
-                randomTransform.rotation.Z = (float)random.Next(0, 360);
-
-                var randomScale = (float)(random.NextDouble() + 1);
-                randomTransform.scale.X = randomScale;
-                randomTransform.scale.Y = randomScale;
-                randomTransform.scale.Z = randomScale;
-
-                resault[i] = new EngineObject();
-                resault[i].Transform = randomTransform;
-                resault[i].Model = new Render3D(modelName, textureName, resault[i]);
-            }
-            return resault;
-        }
-
-        public static Matrix4 Projection;
-
-        Camera camera;
-        EngineObject[] engineObjects;
-
-        public Window(int width, int hight, string title) : base(width, hight, GraphicsMode.Default, title)
-        {
-        }
-        int id2;
 
         protected override void OnLoad(EventArgs e)
         {
@@ -105,12 +81,14 @@ namespace SpaceGame
             Model.CreateModel("cube", vertices);
 
             camera = new Camera(170, 400, Height, Width);
-            //engineObjects = CreateRandomCoolCubes("lava", "cube", 3000, -400, 0);
-            var engineObject = new EngineObject();
+            engineObjects = CreateRandomCoolCubes("lava", "cube", 3000, -400, 0);
+            var engineObject = new GameObject();
             engineObject.Transform = new Transform();
             engineObject.Transform.scale = new Vector3(800, 800, 800);
             engineObject.Model = new Render3D("cube", "stone", engineObject);
         }
+
+
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
@@ -131,6 +109,8 @@ namespace SpaceGame
 
             base.OnResize(e);
         }
+
+
         protected override void OnKeyDown(KeyboardKeyEventArgs e)
         {
             var key = Keyboard.GetState();
@@ -167,9 +147,36 @@ namespace SpaceGame
                 camera.Transform.location += new Vector3(0, 0, -0.1f);
             }
 
-
-
             base.OnKeyDown(e);
+        }
+
+
+        private GameObject[] CreateRandomCoolCubes(string textureName, string modelName, int count, int minSpawnCoordZ, int maxSpawnCoordZ)
+        {
+            var random = new Random();
+            var resault = new GameObject[count];
+            for (int i = 0; i < count; i++)
+            {
+                var randomTransform = new Transform();
+
+                randomTransform.location.X = (float)random.NextDouble() + random.Next(-50, 50);
+                randomTransform.location.Y = (float)random.NextDouble() + random.Next(-50, 50);
+                randomTransform.location.Z = (float)random.NextDouble() + random.Next(minSpawnCoordZ, maxSpawnCoordZ);
+
+                randomTransform.rotation.X = (float)random.Next(0, 360);
+                randomTransform.rotation.Y = (float)random.Next(0, 360);
+                randomTransform.rotation.Z = (float)random.Next(0, 360);
+
+                var randomScale = (float)(random.NextDouble() + 1);
+                randomTransform.scale.X = randomScale;
+                randomTransform.scale.Y = randomScale;
+                randomTransform.scale.Z = randomScale;
+
+                resault[i] = new GameObject();
+                resault[i].Transform = randomTransform;
+                resault[i].Model = new Render3D(modelName, textureName, resault[i]);
+            }
+            return resault;
         }
     }
 }

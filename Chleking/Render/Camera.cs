@@ -12,11 +12,27 @@ namespace SpaceGame.Render
 {
     public class Camera
     {
-        private float fov;
+        public Camera(float fov, float viewRange, int viewHeight, int viewWidth)
+        {
+            Transform = new Transform();
+            this.fov = fov;
+            this.viewRange = viewRange;
+            this.viewHeight = viewHeight;
+            this.viewWidth = viewWidth;
+            UpdateProjection();
+        }
+
+
         public float viewRange;
         public int viewHeight;
         public int viewWidth;
+        private float fov;
+
+
         public Transform Transform { get; set; }
+        public Matrix4 Projection { get; private set; }
+
+
         public float Fov
         {
             get => fov;
@@ -26,6 +42,8 @@ namespace SpaceGame.Render
                 UpdateProjection();
             }
         }
+
+
         public float ViewRange
         {
             get => viewRange;
@@ -35,6 +53,8 @@ namespace SpaceGame.Render
                 UpdateProjection();
             }
         }
+
+
         public int ViewHeight
         {
             get => viewHeight;
@@ -44,6 +64,8 @@ namespace SpaceGame.Render
                 UpdateProjection();
             }
         }
+
+
         public int ViewWidth
         {
             get => viewWidth;
@@ -54,22 +76,16 @@ namespace SpaceGame.Render
             }
         }
 
-        public Matrix4 Projection { get; private set; }
 
-        public Camera(float fov, float viewRange, int viewHeight, int viewWidthl)
+        public void ShowAllInView()
         {
-            Transform = new Transform();
-            this.fov = fov;
-            this.viewRange = viewRange;
-            this.viewHeight = viewHeight;
-            this.viewWidth = viewWidthl;
-            UpdateProjection();
+            var models = Render3D.AllRenders;
+            for (int i = 0; i < models.Count; i++)
+            {
+                models[i].Draw(this);
+            }
         }
 
-        private void UpdateProjection()
-        {
-            Projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(Fov), ((float)ViewHeight) / ViewWidth, 0.1f, ViewRange);
-        }
 
         public Render3D[] GetModelsInView()
         {
@@ -82,6 +98,14 @@ namespace SpaceGame.Render
 
             return null;
         }
+
+
+        private void UpdateProjection()
+        {
+            Projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(Fov), ((float)ViewHeight) / ViewWidth, 0.1f, ViewRange);
+        }
+
+
         private float DistanceSearch(Render3D model, Transform transform)
         {
             float distanceToObject = (float)Math.Sqrt(Math.Pow(model.Transform.location.X - transform.location.X, 2) +
@@ -89,15 +113,6 @@ namespace SpaceGame.Render
                 Math.Pow(model.Transform.location.Z - transform.location.Z, 2));
 
             return distanceToObject;
-        }
-
-        public void ShowAllInView()
-        {
-            var models = Render3D.AllRenders;
-            for (int i = 0; i < models.Count; i++)
-            {
-                models[i].Draw(this);
-            }
         }
     }
 }

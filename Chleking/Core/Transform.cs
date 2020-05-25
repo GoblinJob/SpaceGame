@@ -15,6 +15,7 @@ namespace SpaceGame.Core
             rotation = Quaternion.Identity;
             scale = Vector3.One;
         }
+
         public Vector3 location;
         public Quaternion rotation;
         public Vector3 scale;

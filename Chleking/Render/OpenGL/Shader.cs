@@ -20,17 +20,14 @@ namespace SpaceGame.Render.OpenGL
         {
             return dictionaryOfShaders[name];
         }
+
+
         public static void CreateShader(string name, string vertexPath, string fragmentPath)
         {
             var model = new Shader(vertexPath, fragmentPath);
             dictionaryOfShaders.Add(name, model);
         }
 
-
-        /// <summary>
-        /// Id шейдера в массиве шейдеров OpenGL.
-        /// </summary>
-        public int Id { get; private set; }
 
         private Shader()
         {
@@ -57,6 +54,11 @@ namespace SpaceGame.Render.OpenGL
             DetachDeleteShader(fragmentShader);
         }
 
+
+        /// <summary>
+        /// Id шейдера в массиве шейдеров OpenGL.
+        /// </summary>
+        public int Id { get; private set; }
 
 
         /// <summary>
