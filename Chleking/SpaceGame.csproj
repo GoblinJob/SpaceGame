@@ -99,6 +99,7 @@
     <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.2.9.6\analyzers\dotnet\cs\Microsoft.NetFramework.CSharp.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\goblin.jpg" />
     <Content Include="Assets\box.jpg" />
     <Content Include="Assets\meteor.jpg" />
     <Content Include="Assets\lava.png" />

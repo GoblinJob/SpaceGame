@@ -81,7 +81,7 @@ namespace SpaceGame.Render.OpenGL
 
         private void SetTransformValues(Camera viewer, Transform transform)
         {
-            movingShader.SetMatrix4("view", Matrix4.CreateTranslation(transform.location + viewer.Transform.location));
+            movingShader.SetMatrix4("view", viewer.View * Matrix4.CreateTranslation(transform.location));
             movingShader.SetMatrix4("model", Matrix4.CreateRotationZ(transform.rotation.Z) *
                 Matrix4.CreateRotationY(transform.rotation.Y) *
                 Matrix4.CreateRotationX(transform.rotation.X));

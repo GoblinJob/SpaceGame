@@ -28,8 +28,17 @@ namespace SpaceGame.Render
         public int viewWidth;
         private float fov;
 
-
+        double i = 0.0;
         public Transform Transform { get; set; }
+        public Matrix4 View
+        {
+            get
+            {
+                i += 0.2;
+                return Matrix4.LookAt(new Vector3((float)Math.Sin(i) * 10, (float)Math.Cos(i) * 10, 0),
+                new Vector3(0, 0, 0), new Vector3(0, 1, 0));
+            }
+        }
         public Matrix4 Projection { get; private set; }
 
 
@@ -86,33 +95,9 @@ namespace SpaceGame.Render
             }
         }
 
-
-        public Render3D[] GetModelsInView()
-        {
-            Render3D.AllRenders.Sort((Render3D model1, Render3D model2) =>
-            {
-                if (DistanceSearch(model1, Transform) > DistanceSearch(model2, Transform)) return 1;
-                else if (DistanceSearch(model1, Transform) < DistanceSearch(model2, Transform)) return -1;
-                else return 0;
-            });
-
-            return null;
-        }
-
-
         private void UpdateProjection()
         {
             Projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(Fov), ((float)ViewHeight) / ViewWidth, 0.1f, ViewRange);
-        }
-
-
-        private float DistanceSearch(Render3D model, Transform transform)
-        {
-            float distanceToObject = (float)Math.Sqrt(Math.Pow(model.Transform.location.X - transform.location.X, 2) +
-                Math.Pow(model.Transform.location.Y - transform.location.Y, 2) +
-                Math.Pow(model.Transform.location.Z - transform.location.Z, 2));
-
-            return distanceToObject;
         }
     }
 }

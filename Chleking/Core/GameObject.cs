@@ -11,7 +11,21 @@ namespace SpaceGame.Core
 {
     public class GameObject
     {
-        public GameObject(Transform transform, Vector3[] colliderVertices, string modelName, string textureName)
+        public GameObject(Transform transform, string modelName, string textureName)
+        {
+            Transform = transform;
+            Model = new Render3D(modelName, textureName, this);
+        }
+
+
+        public GameObject(Transform transform, Vector3[] colliderVertices)
+        {
+            Transform = transform;
+            Collider = new Collider(colliderVertices, this);
+        }
+
+
+        public GameObject(Transform transform, string modelName, string textureName, Vector3[] colliderVertices)
         {
             Transform = transform;
             Collider = new Collider(colliderVertices, this);

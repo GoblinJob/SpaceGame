@@ -75,17 +75,14 @@ namespace SpaceGame
             GL.ClearColor(Color4.Black);
             GL.Enable(EnableCap.DepthTest);
 
-            Texture.CreateTexture("lava", @"..\..\Assets\space.png");
+            Texture.CreateTexture("lava", @"..\..\Assets\goblin.jpg");
             Texture.CreateTexture("stone", @"..\..\Assets\spaceBlue.jpg");
             Shader.CreateShader("0", @"..\..\Render\OpenGL\Shaders\Transform.vert", @"..\..\Render\OpenGL\Shaders\TextureOverlay.frag");
             Model.CreateModel("cube", vertices);
 
-            camera = new Camera(170, 400, Height, Width);
-            engineObjects = CreateRandomCoolCubes("lava", "cube", 3000, -400, 0);
-            var engineObject = new GameObject();
-            engineObject.Transform = new Transform();
-            engineObject.Transform.scale = new Vector3(800, 800, 800);
-            engineObject.Model = new Render3D("cube", "stone", engineObject);
+            camera = new Camera(60, 100, Height, Width);
+            camera.Transform.location = new Vector3(0, 0, 10);
+            engineObjects = CreateRandomCoolCubes("cube", "lava", 5, -1, 5);
         }
 
 
@@ -151,7 +148,7 @@ namespace SpaceGame
         }
 
 
-        private GameObject[] CreateRandomCoolCubes(string textureName, string modelName, int count, int minSpawnCoordZ, int maxSpawnCoordZ)
+        private GameObject[] CreateRandomCoolCubes(string modelName, string textureName, int count, int minSpawnCoordZ, int maxSpawnCoordZ)
         {
             var random = new Random();
             var resault = new GameObject[count];
@@ -159,8 +156,8 @@ namespace SpaceGame
             {
                 var randomTransform = new Transform();
 
-                randomTransform.location.X = (float)random.NextDouble() + random.Next(-50, 50);
-                randomTransform.location.Y = (float)random.NextDouble() + random.Next(-50, 50);
+                randomTransform.location.X = (float)random.NextDouble() + random.Next(-3, 3);
+                randomTransform.location.Y = (float)random.NextDouble() + random.Next(-3, 3);
                 randomTransform.location.Z = (float)random.NextDouble() + random.Next(minSpawnCoordZ, maxSpawnCoordZ);
 
                 randomTransform.rotation.X = (float)random.Next(0, 360);
@@ -172,9 +169,7 @@ namespace SpaceGame
                 randomTransform.scale.Y = randomScale;
                 randomTransform.scale.Z = randomScale;
 
-                resault[i] = new GameObject();
-                resault[i].Transform = randomTransform;
-                resault[i].Model = new Render3D(modelName, textureName, resault[i]);
+                resault[i] = new GameObject(randomTransform, modelName, textureName);
             }
             return resault;
         }
