@@ -1,4 +1,5 @@
-﻿using OpenTK;
+﻿using Chleking.Render.OpenGL;
+using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Input;
@@ -101,68 +102,53 @@ namespace SpaceGame
             GL.Enable(EnableCap.DepthTest);
             CursorVisible = false;
 
-            Texture.CreateTexture("goblin", @"..\..\Assets\goblin.jpg");
-            Texture.CreateTexture("spaceBlue", @"..\..\Assets\spaceBlue.jpg");
-            Texture.CreateTexture("meteor", @"..\..\Assets\meteor.jpg");
-            Texture.CreateTexture("lava", @"..\..\Assets\lava.png");
-            Texture.CreateTexture("space", @"..\..\Assets\space.png");
-            Texture.CreateTexture("box", @"..\..\Assets\box.jpg");
-            Texture.CreateTexture("betterGoblin", @"..\..\Assets\betterGoblin.png");
-            Texture.CreateTexture("Gorinich", @"..\..\Assets\Gorinich.png");
-            Texture.CreateTexture("moveIcon", @"..\..\Assets\moveIcon.png");
-            Texture.CreateTexture("spaceSamir", @"..\..\Assets\spaceSamir.png");
-            Texture.CreateTexture("realSamir", @"..\..\Assets\realSamir.jpg");
-            Texture.CreateTexture("BrainSamir", @"..\..\Assets\BrainSamir.png");
-            Texture.CreateTexture("CollSam", @"..\..\Assets\CollSam.png");
-            Shader.CreateShader("0", @"..\..\Render\OpenGL\Shaders\Transform.vert", @"..\..\Render\OpenGL\Shaders\TextureOverlay.frag");
-            Model.CreateModel("cube", vertices);
-            
+            //ResurceManager.LoadTexture( "goblin", @"..\..\Assets\goblin.jpg");
+            //Texture.CreateTexture("spaceBlue", @"..\..\Assets\spaceBlue.jpg");
+            //Texture.CreateTexture("meteor", @"..\..\Assets\meteor.jpg");
+            //Texture.CreateTexture("lava", @"..\..\Assets\lava.png");
+            //Texture.CreateTexture("space", @"..\..\Assets\space.png");
+            //Texture.CreateTexture("box", @"..\..\Assets\box.jpg");
+            //Texture.CreateTexture("betterGoblin", @"..\..\Assets\betterGoblin.png");
+            //Texture.CreateTexture("Gorinich", @"..\..\Assets\Gorinich.png");
+            //Texture.CreateTexture("moveIcon", @"..\..\Assets\moveIcon.png");
+            //Texture.CreateTexture("spaceSamir", @"..\..\Assets\spaceSamir.png");
+            //Texture.CreateTexture("realSamir", @"..\..\Assets\realSamir.jpg");
+            //Texture.CreateTexture("BrainSamir", @"..\..\Assets\BrainSamir.png");
+            //Texture.CreateTexture("CollSam", @"..\..\Assets\CollSam.png");
+            //Shader.CreateShader("standart", @"..\..\Render\OpenGL\Shaders\Transform.vert", @"..\..\Render\OpenGL\Shaders\textureLight.frag");
+            //Shader.CreateShader("light", @"..\..\Render\OpenGL\Shaders\Transform.vert", @"..\..\Render\OpenGL\Shaders\light.frag");
+            //VertexInfo.CreateModel("cube", vertices);
+
+
+            ResurceManager.LoadTexture("goblin", new Texture(), @"..\..\Assets\goblin.jpg");
+            ResurceManager.LoadVertexInfo("cube", new VertexInfo(), vertices);
+            ResurceManager.LoadShader("light", new StandartShader(ResurceManager.GetTexture("goblin")), @"..\..\Render\OpenGL\Shaders\Source\transform.vert", @"..\..\Render\OpenGL\Shaders\Source\light.frag");
+            ResurceManager.LoadShader("standart", new StandartShader(ResurceManager.GetTexture("goblin")), @"..\..\Render\OpenGL\Shaders\Source\transform.vert", @"..\..\Render\OpenGL\Shaders\Source\texturesAndLight.frag");
+            ResurceManager.LoadModel("lightBlock", new Model(), "cube", "light");
+            ResurceManager.LoadModel("goblinBlock", new Model(), "cube", "standart");
+
             camera = new Camera(90, 100, Height, Width);
-            camera.Transform.rotation = Quaternion.Identity;
-            //_ = new GameObject(new Transform(new Vector3(0, 0, -2f)), "cube", "goblin");
-            //_ = new GameObject(new Transform(new Vector3(-0.5f, 0, -4f), new Quaternion(30, 120, 0)), "cube", "goblin");
-            //_ = new GameObject(new Transform(new Vector3(-2.5f, 0, -4f), new Quaternion(30, 120, 0)), "cube", "goblin");
-            //_ = new GameObject(new Transform(new Vector3(0.5f, 2.0f, -4f), new Quaternion(30, 120, 0)), "cube", "goblin");
-            //_ = new GameObject(new Transform(new Vector3(-2.5f, 2.4f, -4f), new Quaternion(30, 120, 0)), "cube", "goblin");
+            _ = new GameObject(new Transform(new Vector3(-0.5f, -2f, -4f)), "lightBlock");
+            _ = new GameObject(new Transform(new Vector3(0, 0, -2f)), "goblinBlock");
 
-
-            CreateRandomCoolCubes("cube", "spaceBlue", 50, -70, -60, 20);
-            CreateRandomCoolCubes("cube", "lava", 50, -60, -50, 20);
-            CreateRandomCoolCubes("cube", "goblin", 50, -50, -40, 20);
-            CreateRandomCoolCubes("cube", "space", 50, -40, -30, 20);
-            CreateRandomCoolCubes("cube", "CollSam", 50, -30, -20, 20);
-            CreateRandomCoolCubes("cube", "Gorinich", 50, -20, -10, 20);
-            CreateRandomCoolCubes("cube", "moveIcon", 50, -10, 0, 20);
-            CreateRandomCoolCubes("cube", "spaceSamir", 50, 0, 10, 20);
-            CreateRandomCoolCubes("cube", "realSamir", 50, 10, 20, 20);
-            CreateRandomCoolCubes("cube", "BrainSamir", 50, 20, 30, 20);
-            CreateRandomCoolCubes("cube", "meteor", 50, 30, 40, 20);
-            CreateRandomCoolCubes("cube", "box", 50, 40, 50, 20);
-            CreateRandomCoolCubes("cube", "goblin", 50, 50, 60, 20);
-            CreateRandomCoolCubes("cube", "betterGoblin", 50, 60, 70, 20);
-
-            foreach (var item in Texture.dictionaryOfTextures)
-            {
-                Console.WriteLine(item);
-            }
+            //CreateRandomCoolCubes("cube", "spaceBlue", 50, -70, -60, 20);
+            //CreateRandomCoolCubes("cube", "lava", 50, -60, -50, 20);
+            //CreateRandomCoolCubes("cube", "goblin", 50, -50, -40, 20);
+            //CreateRandomCoolCubes("cube", "space", 50, -40, -30, 20);
+            //CreateRandomCoolCubes("cube", "CollSam", 50, -30, -20, 20);
+            //CreateRandomCoolCubes("cube", "Gorinich", 50, -20, -10, 20);
+            //CreateRandomCoolCubes("cube", "moveIcon", 50, -10, 0, 20);
+            //CreateRandomCoolCubes("cube", "spaceSamir", 50, 0, 10, 20);
+            //CreateRandomCoolCubes("cube", "realSamir", 50, 10, 20, 20);
+            //CreateRandomCoolCubes("cube", "BrainSamir", 50, 20, 30, 20);
+            //CreateRandomCoolCubes("cube", "meteor", 50, 30, 40, 20);
+            //CreateRandomCoolCubes("cube", "box", 50, 40, 50, 20);
+            //CreateRandomCoolCubes("cube", "goblin", 50, 50, 60, 20);
+            //CreateRandomCoolCubes("cube", "betterGoblin", 50, 60, 70, 20);
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
-            int color;
-            if (DateTime.Now.Minute % 2 == 0)
-            {
-                color = (int)((float)DateTime.Now.Second / 60 * 255) + 20;
-                color = Math.Min(color, 255);
-            }
-            else
-            {
-                color = 255 - ((int)((float)DateTime.Now.Second / 60 * 255) + 20);
-                color = Math.Max(color, 0);
-            }
-            color = Math.Min(color, 255);
-            Console.WriteLine(color);
-            GL.ClearColor(Color.FromArgb(color, color, (int)((float)color * 0.75f)));
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             camera.ShowAllInView();
@@ -199,9 +185,9 @@ namespace SpaceGame
             base.OnResize(e);
         }
 
-        float speed = 90.0f;
+        float speed = 9.0f;
         float sensitivity = 0.2f;
-        float yaw = 90.0f;
+        float yaw = 0.0f;
         float pitch = 0;
         bool FirstMove = true;
         private void DoMouseMovement()
@@ -298,31 +284,31 @@ namespace SpaceGame
 
 
 
+        // TODO: Random generation.
+        //private GameObject[] CreateRandomCoolCubes(string modelName, string shaderName, string textureName, int count, int minSpawnCoordZ, int maxSpawnCoordZ, int maxSpawnCoordXY)
+        //{
+        //    var random = new Random();
+        //    var resault = new GameObject[count];
+        //    for (int i = 0; i < count; i++)
+        //    {
+        //        var randomTransform = new Transform();
 
-        private GameObject[] CreateRandomCoolCubes(string modelName, string textureName, int count, int minSpawnCoordZ, int maxSpawnCoordZ, int maxSpawnCoordXY)
-        {
-            var random = new Random();
-            var resault = new GameObject[count];
-            for (int i = 0; i < count; i++)
-            {
-                var randomTransform = new Transform();
+        //        randomTransform.position.X = (float)random.NextDouble() + random.Next(-maxSpawnCoordXY, maxSpawnCoordXY);
+        //        randomTransform.position.Y = (float)random.NextDouble() + random.Next(-maxSpawnCoordXY, maxSpawnCoordXY);
+        //        randomTransform.position.Z = (float)random.NextDouble() + random.Next(minSpawnCoordZ, maxSpawnCoordZ);
 
-                randomTransform.position.X = (float)random.NextDouble() + random.Next(-maxSpawnCoordXY, maxSpawnCoordXY);
-                randomTransform.position.Y = (float)random.NextDouble() + random.Next(-maxSpawnCoordXY, maxSpawnCoordXY);
-                randomTransform.position.Z = (float)random.NextDouble() + random.Next(minSpawnCoordZ, maxSpawnCoordZ);
+        //        randomTransform.rotation.X = (float)random.Next(0, 360);
+        //        randomTransform.rotation.Y = (float)random.Next(0, 360);
+        //        randomTransform.rotation.Z = (float)random.Next(0, 360);
 
-                randomTransform.rotation.X = (float)random.Next(0, 360);
-                randomTransform.rotation.Y = (float)random.Next(0, 360);
-                randomTransform.rotation.Z = (float)random.Next(0, 360);
+        //        var randomScale = (float)(random.NextDouble() + 1);
+        //        randomTransform.scale.X = randomScale;
+        //        randomTransform.scale.Y = randomScale;
+        //        randomTransform.scale.Z = randomScale;
 
-                var randomScale = (float)(random.NextDouble() + 1);
-                randomTransform.scale.X = randomScale;
-                randomTransform.scale.Y = randomScale;
-                randomTransform.scale.Z = randomScale;
-
-                resault[i] = new GameObject(randomTransform, modelName, textureName);
-            }
-            return resault;
-        }
+        //        resault[i] = new GameObject(randomTransform, shaderName, modelName, textureName);
+        //    }
+        //    return resault;
+        //}
     }
 }

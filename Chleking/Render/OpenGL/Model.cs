@@ -1,121 +1,67 @@
-﻿using OpenTK.Graphics.OpenGL4;
+﻿using Chleking.Render;
+using OpenTK;
+using OpenTK.Graphics;
+using OpenTK.Graphics.OpenGL4;
+using SpaceGame.Core;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
 namespace SpaceGame.Render.OpenGL
 {
-    public class Model : IUsableByRender, IDisposable
+    public class Model : RenderEntity, IDrawable
     {
-        public const int RowSize = 5;
-
-
-        private static Dictionary<string, Model> dictionaryOfModels = new Dictionary<string, Model>();
-
-
-        public static Model GetModel(string name)
+        public Model()
         {
-            return dictionaryOfModels[name];
+        }
+        public VertexInfo VertexInfo { get; private set; }
+        public Shader Shader { get; private set; }
+
+
+        public void Load(VertexInfo vertexInfo, Shader shader)
+        {
+            SetLoaded();
+
+            this.VertexInfo = vertexInfo;
+            this.Shader = shader;
+            Id = InitializeOpenGL();
+        }
+
+        public void Unload()
+        {
+            SetUnloaded();
+
+            GL.DeleteVertexArray(Id);
         }
 
 
-        public static void CreateModel(string name, float[] verticeInfo)
+        public void Draw(Transform objectTransorm, Camera viewer)
         {
-            var model = new Model(verticeInfo);
-            dictionaryOfModels.Add(name, model);
+            GL.BindVertexArray(Id);
+            Shader.Use(objectTransorm, viewer);
+
+            GL.DrawArrays(PrimitiveType.Triangles, 0, VertexInfo.VertexCount);
         }
 
-
-        public static void CreateModel(string name, float[] vertices, float[] textCoord)
+        private int InitializeOpenGL()
         {
-            var model = new Model(CreateVerticesInfo(vertices, textCoord, vertices.Length + textCoord.Length));
-            dictionaryOfModels.Add(name, model);
-        }
+            int id = GL.GenVertexArray();
+            GL.BindVertexArray(id);
+            VertexInfo.Use();
 
+            // Инициализация значений позиции.
+            //var positionLocation = movingShader.GetAttribLocation("Position");
+            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
+            GL.EnableVertexAttribArray(0);
 
-        private static bool IsVertexInfoFormat(float[] vertices, float[] textCoord)
-        {
-            return vertices.Length / 3 == textCoord.Length / 2;
-        }
-
-        private static float[] CreateVerticesInfo(float[] vertices, float[] textCoord, int elementCount)
-        {
-            if (!IsVertexInfoFormat(vertices, textCoord))
-                // TODO: Создать класс исключения.
-                throw new Exception("Arrays in not in required format.");
-
-            float[] result = new float[elementCount];
-
-            for (int vertexIndex = 0; vertexIndex < elementCount / RowSize; vertexIndex++)
-            {
-                result[vertexIndex * RowSize] = vertices[vertexIndex * 3];
-                result[vertexIndex * RowSize + 1] = vertices[vertexIndex * 3 + 1];
-                result[vertexIndex * RowSize + 2] = vertices[vertexIndex * 3 + 2];
-                result[vertexIndex * RowSize + 3] = textCoord[vertexIndex * 2];
-                result[vertexIndex * RowSize + 4] = textCoord[vertexIndex * 2 + 1];
-            }
-            return result;
-        }
-
-
-        private Model()
-        {
-        }
-
-        private Model(float[] verticesInfo)
-        {
-            ElementCount = verticesInfo.Length;
-            Id = InitializeDataOpenGL(verticesInfo);
-        }
-
-
-        public int Id { get; private set; }
-        public int ElementCount { get; private set; }
-
-
-        public int VertexCount => ElementCount / 5;
-        public int ElementsSize => ElementCount * sizeof(float);
-
-
-        public float[] Value
-        {
-            get
-            {
-                var result = new float[ElementCount];
-                GL.BindBuffer(BufferTarget.ArrayBuffer, Id);
-                GL.GetBufferSubData(BufferTarget.ArrayBuffer, IntPtr.Zero, ElementsSize, result);
-                return result;
-            }
-            set
-            {
-                // TODO: Проверить, как это работает !!!
-                GL.DeleteBuffer(Id);
-                GL.BindBuffer(BufferTarget.ArrayBuffer, Id);
-                Id = InitializeDataOpenGL(value);
-            }
-        }
-
-
-        public void Use()
-        {
-            GL.BindBuffer(BufferTarget.ArrayBuffer, Id);
-        }
-
-
-        public void Dispose()
-        {
-            GL.DeleteBuffer(Id);
-        }
-
-
-        private int InitializeDataOpenGL(float[] verticesInfo)
-        {
-            int id = GL.GenBuffer();
-            GL.BindBuffer(BufferTarget.ArrayBuffer, id);
-            GL.BufferData(BufferTarget.ArrayBuffer, ElementsSize, verticesInfo, BufferUsageHint.StaticDraw);
+            // Инициализация значений координат текстур.
+            //var texCoordLocation = movingShader.GetAttribLocation("TexCoord");
+            GL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
+            GL.EnableVertexAttribArray(1);
             return id;
         }
     }

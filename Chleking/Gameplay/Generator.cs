@@ -1,13 +1,13 @@
-﻿using System;
+﻿using OpenTK;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SpaceGame.Render.OpenGL
+namespace SpaceGame.Gameplay
 {
-    interface IUsableByRender
+    public static class Generator
     {
-        void Use();
     }
 }

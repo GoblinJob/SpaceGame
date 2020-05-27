@@ -60,18 +60,23 @@
     <Compile Include="Collisions\CollisionSystem.cs" />
     <Compile Include="Core\GameObject.cs" />
     <Compile Include="Collisions\Collider.cs" />
+    <Compile Include="Core\ResurceManager.cs" />
     <Compile Include="Core\Transform.cs" />
-    <Compile Include="Gameplay\Meteor.cs" />
+    <Compile Include="Gameplay\Generator.cs" />
     <Compile Include="IEngineSystem.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Render\Camera.cs" />
+    <Compile Include="Render\Exceptions\EntityAlreadyLoadException.cs" />
+    <Compile Include="Render\Exceptions\EntityNotLoadedException.cs" />
+    <Compile Include="Render\IDrawable.cs" />
+    <Compile Include="Render\OpenGL\Shaders\StandartShader.cs" />
     <Compile Include="Render\Render3D.cs" />
-    <Compile Include="Render\OpenGL\IRenderable.cs" />
-    <Compile Include="Render\OpenGL\RenderableObject.cs" />
-    <Compile Include="Render\OpenGL\Shader.cs" />
-    <Compile Include="Render\OpenGL\Texture.cs" />
+    <Compile Include="Render\RenderEntity.cs" />
     <Compile Include="Render\OpenGL\Model.cs" />
+    <Compile Include="Render\OpenGL\Shaders\Shader.cs" />
+    <Compile Include="Render\OpenGL\Shaders\Texture.cs" />
+    <Compile Include="Render\OpenGL\VertexInfo.cs" />
     <Compile Include="Window.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -81,8 +86,9 @@
     <None Include="App.config" />
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
-    <None Include="Render\OpenGL\Shaders\TextureOverlay.frag" />
-    <None Include="Render\OpenGL\Shaders\Transform.vert" />
+    <None Include="Render\OpenGL\Shaders\Source\light.frag" />
+    <None Include="Render\OpenGL\Shaders\Source\texturesAndLight.frag" />
+    <None Include="Render\OpenGL\Shaders\Source\transform.vert" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Physics\" />

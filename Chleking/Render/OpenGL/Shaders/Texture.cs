@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,47 +16,30 @@ namespace SpaceGame.Render.OpenGL
     /// Двумерная текстура, взаимодействующая с OpenGL.
     /// Cпособно отображать RGBA цвета.
     /// </summary>
-    public class Texture : IUsableByRender, IDisposable
+    public class Texture : RenderEntity
     {
-        public static Dictionary<string, Texture> dictionaryOfTextures = new Dictionary<string, Texture>();
-
-        public static Texture GetTexture(string name)
-        {
-            return dictionaryOfTextures[name];
-        }
-
-
-        public static void CreateTexture(string name, string imagePath)
-        {
-            var model = new Texture(imagePath);
-            dictionaryOfTextures.Add(name, model);
-        }
-
-
-        private Texture()
+        public Texture()
         {
         }
 
 
-        private Texture(string imagePath)
+        public void Load(Bitmap image)
         {
+            SetLoaded();
+
             // Создаем текстуру в памяти OpenGL.
             Id = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2D, Id);
 
             // Инициализируем текстуру картинкой.
-            using (var image = new Bitmap(imagePath))
-            {
-                image.RotateFlip(RotateFlipType.Rotate180FlipX);
-                var data = image.LockBits(
-                    new Rectangle(0, 0, image.Width, image.Height),
-                    ImageLockMode.ReadOnly,
-                    System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            image.RotateFlip(RotateFlipType.Rotate180FlipX);
+            var data = image.LockBits(
+                new Rectangle(0, 0, image.Width, image.Height),
+                ImageLockMode.ReadOnly,
+                System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
-                GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, image.Width,
-                    image.Height, 0, PixelFormat.Bgra, PixelType.UnsignedByte, data.Scan0);
-
-            }
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, image.Width,
+                 image.Height, 0, PixelFormat.Bgra, PixelType.UnsignedByte, data.Scan0);
 
             // Установка параметров наложения текстуры.
             SetTextureParameters();
@@ -65,20 +49,18 @@ namespace SpaceGame.Render.OpenGL
             Use();
         }
 
-
-        /// <summary>
-        /// Id текстуры в массиве текстур OpenGL.
-        /// </summary>
-        public int Id { get; private set; }
-
-
-        /// <summary>
-        /// Привязка текстуры для использования OpenGL.
-        /// </summary>
         public void Use()
         {
             GL.ActiveTexture(TextureUnit.Texture0);
             GL.BindTexture(TextureTarget.Texture2D, Id);
+        }
+
+
+        public void Unload()
+        {
+            SetUnloaded();
+
+            GL.DeleteTexture(Id);
         }
 
         /// <summary>
@@ -90,13 +72,6 @@ namespace SpaceGame.Render.OpenGL
             GL.ActiveTexture(unit);
             GL.BindTexture(TextureTarget.Texture2D, Id);
         }
-
-
-        public void Dispose()
-        {
-            GL.DeleteTexture(Id);
-        }
-
 
         /// <summary>
         /// Устанавливает параметры наложения текстуры.
