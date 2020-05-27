@@ -17,7 +17,7 @@ namespace SpaceGame.Render.OpenGL
     /// </summary>
     public class Texture : IUsableByRender, IDisposable
     {
-        private static Dictionary<string, Texture> dictionaryOfTextures = new Dictionary<string, Texture>();
+        public static Dictionary<string, Texture> dictionaryOfTextures = new Dictionary<string, Texture>();
 
         public static Texture GetTexture(string name)
         {

@@ -11,13 +11,28 @@ namespace SpaceGame.Core
     {
         public Transform()
         {
-            location = Vector3.Zero;
-            rotation = Quaternion.Identity;
-            scale = Vector3.One;
+        }
+        public Transform(Vector3 location)
+        {
+            this.position = location;
         }
 
-        public Vector3 location;
-        public Quaternion rotation;
-        public Vector3 scale;
+        public Transform(Vector3 location, Quaternion rotation) 
+            : this(location)
+        {
+            this.rotation = rotation;
+        }
+
+        public Transform(Vector3 location, Quaternion rotation, Vector3 scale)
+    : this(location, rotation)
+        {
+            this.scale = scale;
+        }
+
+        public Vector3 ForwardVector => rotation.Xyz.Normalized();
+
+        public Vector3 position;
+        public Quaternion rotation = Quaternion.Identity;
+        public Vector3 scale = Vector3.One;
     }
 }

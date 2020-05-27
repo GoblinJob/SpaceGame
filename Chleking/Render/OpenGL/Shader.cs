@@ -1,7 +1,9 @@
 ﻿using OpenTK;
+using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -121,6 +123,17 @@ namespace SpaceGame.Render.OpenGL
         {
             var uniformLocation = GL.GetUniformLocation(Id, name);
             GL.Uniform3(uniformLocation, value);
+        }
+
+        /// <summary>
+        /// Установка значения uniform переменной в шейдере по имени. 
+        /// </summary>
+        /// <param name="name">Имя переменной</param>
+        /// <param name="value">Устонавливаемое значение</param>
+        public void SetVector3(string name, Color value)
+        {
+            var uniformLocation = GL.GetUniformLocation(Id, name);
+            GL.Uniform3(uniformLocation, value.R, value.G, value.B);
         }
 
         /// <summary>

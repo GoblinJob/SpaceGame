@@ -1,8 +1,11 @@
 ﻿using OpenTK;
+using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using SpaceGame.Core;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -81,9 +84,20 @@ namespace SpaceGame.Render.OpenGL
 
         private void SetTransformValues(Camera viewer, Transform transform)
         {
-            movingShader.SetMatrix4("view", viewer.View * Matrix4.CreateTranslation(transform.location));
-            movingShader.SetMatrix4("model", Matrix4.CreateRotationZ(transform.rotation.Z) *
-                Matrix4.CreateRotationY(transform.rotation.Y) *
+            float color;
+            if (DateTime.Now.Minute % 2 == 0)
+            {
+                color = DateTime.Now.Second / 60.0f + 20.0f / 255.0f;
+            }
+            else
+            {
+                color = 1 - DateTime.Now.Second / 60.0f + 20.0f / 255.0f;
+            } 
+
+            movingShader.SetVector3("color", new Vector3(color, color, ((float)color * 0.75f)));
+            movingShader.SetMatrix4("view", viewer.View);
+            movingShader.SetMatrix4("model", Matrix4.CreateTranslation(transform.position) * Matrix4.CreateRotationZ(transform.rotation.Z) *
+                Matrix4.CreateRotationY(transform.rotation.Y) * 
                 Matrix4.CreateRotationX(transform.rotation.X));
             movingShader.SetMatrix4("projection", viewer.Projection);
             movingShader.SetVector3("scale", transform.scale);

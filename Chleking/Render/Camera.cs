@@ -14,7 +14,6 @@ namespace SpaceGame.Render
     {
         public Camera(float fov, float viewRange, int viewHeight, int viewWidth)
         {
-            Transform = new Transform();
             this.fov = fov;
             this.viewRange = viewRange;
             this.viewHeight = viewHeight;
@@ -22,25 +21,28 @@ namespace SpaceGame.Render
             UpdateProjection();
         }
 
+        public Camera(float fov, float viewRange, int viewHeight, int viewWidth, Vector3 startPosition) 
+            : this(fov, viewRange, viewHeight, viewWidth)
+        {
+            Transform.position = startPosition;
+        }
 
-        public float viewRange;
-        public int viewHeight;
-        public int viewWidth;
+        public Camera(float fov, float viewRange, int viewHeight, int viewWidth, Transform transform)
+    : this(fov, viewRange, viewHeight, viewWidth)
+        {
+            Transform = transform;
+        }
+
+        private float viewRange;
+        private int viewHeight;
+        private int viewWidth;
         private float fov;
 
-        double i = 0.0;
-        public Transform Transform { get; set; }
-        public Matrix4 View
-        {
-            get
-            {
-                i += 0.2;
-                return Matrix4.LookAt(new Vector3((float)Math.Sin(i) * 10, (float)Math.Cos(i) * 10, 0),
-                new Vector3(0, 0, 0), new Vector3(0, 1, 0));
-            }
-        }
+        public Transform Transform { get; set; } = new Transform();
+        public Matrix4 View => Matrix4.LookAt(Transform.position, Transform.position + Front, Up);
         public Matrix4 Projection { get; private set; }
-
+        public Vector3 Front { get; set; } = new Vector3(0, 0, -1);
+        public Vector3 Up { get; private set; } = new Vector3(0, 1, 0);
 
         public float Fov
         {
@@ -52,7 +54,6 @@ namespace SpaceGame.Render
             }
         }
 
-
         public float ViewRange
         {
             get => viewRange;
@@ -63,7 +64,6 @@ namespace SpaceGame.Render
             }
         }
 
-
         public int ViewHeight
         {
             get => viewHeight;
@@ -73,7 +73,6 @@ namespace SpaceGame.Render
                 UpdateProjection();
             }
         }
-
 
         public int ViewWidth
         {
@@ -86,6 +85,7 @@ namespace SpaceGame.Render
         }
 
 
+
         public void ShowAllInView()
         {
             var models = Render3D.AllRenders;
@@ -93,6 +93,14 @@ namespace SpaceGame.Render
             {
                 models[i].Draw(this);
             }
+        }
+
+        private Matrix4 CreateViewMatrix(Vector3 position, Vector3 target, Vector3 xDirection)
+        {
+            var vectorX = xDirection;
+            var vectorY = Vector3.Cross(xDirection, Vector3.UnitX);
+            var vectorZ = Vector3.Cross(xDirection, Vector3.UnitX);
+            return Matrix4.Identity;
         }
 
         private void UpdateProjection()
