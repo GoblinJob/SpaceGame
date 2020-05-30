@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using PixelFormat = OpenTK.Graphics.OpenGL4.PixelFormat;
 
-namespace SpaceGame.Render.OpenGL
+namespace SpaceGame.Render
 {
     /// <summary>
     /// Двумерная текстура, взаимодействующая с OpenGL.

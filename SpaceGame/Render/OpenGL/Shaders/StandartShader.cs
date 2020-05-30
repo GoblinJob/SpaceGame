@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Chleking.Render.OpenGL
+namespace SpaceGame.Render
 {
     public class StandartShader : Shader
     {

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SpaceGame.Core
+namespace SpaceGame
 {
     public class GameObject
     {

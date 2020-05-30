@@ -11,9 +11,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SpaceGame.Render.OpenGL
+namespace SpaceGame.Render
 {
-    public class Model : RenderEntity, IDrawable
+    public class Model : IDrawable
     {
         public Model()
         {

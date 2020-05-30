@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SpaceGame.Render.OpenGL
+namespace SpaceGame.Render
 {
     /// <summary>
     /// Шейдер загружаймый в OpenGL.
