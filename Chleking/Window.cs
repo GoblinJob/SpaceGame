@@ -121,7 +121,7 @@ namespace SpaceGame
 
 
             ResurceManager.LoadTexture("goblin", new Texture(), @"..\..\Assets\goblin.jpg");
-            ResurceManager.LoadVertexInfo("cube", new VertexInfo(), vertices);
+            ResurceManager.LoadVertexInfo("cube", new VerticesInfo(), vertices);
             ResurceManager.LoadShader("light", new StandartShader(ResurceManager.GetTexture("goblin")), @"..\..\Render\OpenGL\Shaders\Source\transform.vert", @"..\..\Render\OpenGL\Shaders\Source\light.frag");
             ResurceManager.LoadShader("standart", new StandartShader(ResurceManager.GetTexture("goblin")), @"..\..\Render\OpenGL\Shaders\Source\transform.vert", @"..\..\Render\OpenGL\Shaders\Source\texturesAndLight.frag");
             ResurceManager.LoadModel("lightBlock", new Model(), "cube", "light");

@@ -11,12 +11,12 @@ namespace SpaceGame
 {
     class ResurceManager
     {
-        private static Dictionary<string, VertexInfo> vertexInfoDictionary = new Dictionary<string, VertexInfo>();
+        private static Dictionary<string, VerticesInfo> vertexInfoDictionary = new Dictionary<string, VerticesInfo>();
         private static Dictionary<string, Shader> shadersDictionary = new Dictionary<string, Shader>();
         public static Dictionary<string, Texture> textureDictionary = new Dictionary<string, Texture>();
         public static Dictionary<string, Model> modelDictionary = new Dictionary<string, Model>();
 
-        public static VertexInfo GetVertexInfo(string name)
+        public static VerticesInfo GetVertexInfo(string name)
         {
             return vertexInfoDictionary[name];
         }
@@ -37,7 +37,7 @@ namespace SpaceGame
         }
 
 
-        public static void LoadVertexInfo(string name, VertexInfo loadVertexInfo, float[] vertexInfo)
+        public static void LoadVertexInfo(string name, VerticesInfo loadVertexInfo, float[] vertexInfo)
         {
             loadVertexInfo.Load(vertexInfo);
             vertexInfoDictionary.Add(name, loadVertexInfo);

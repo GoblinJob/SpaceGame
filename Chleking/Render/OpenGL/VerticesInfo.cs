@@ -10,9 +10,12 @@ using System.Threading.Tasks;
 
 namespace SpaceGame.Render.OpenGL
 {
-    public sealed class VertexInfo : RenderEntity
+    public sealed class VerticesInfo
     {
-        public const int RowSize = 5;
+        public int Id { get; private set; }
+        public int VertexLength { get; }
+        private RenderEntityState state = new RenderEntityState();
+        public VerticesAttributeInfo[] AttributeInfo { get; }
         /// <summary>
         /// Убирает какую-либо используемую привязку объекта этого типа и схожего. 
         /// </summary>
@@ -21,21 +24,24 @@ namespace SpaceGame.Render.OpenGL
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
         }
 
-        public VertexInfo()
+        public VerticesInfo(int vertexLength, VerticesAttributeInfo[] attributeInfo)
         {
+            this.VertexLength = vertexLength;
+            this.AttributeInfo = attributeInfo;
         }
 
-        public int ElementCount { get; private set; }
-        public int VertexCount => ElementCount / RowSize;
-        public int ElementsSize => ElementCount * sizeof(float);
+        public int Length { get; private set; }
+        public int VertexCount => Length / Length;
+        public int VertexByteSize => Length / Length;
+        public int ByteSize => Length * sizeof(float);
 
 
         public void Load(float[] vertexInfo)
         {
             if (vertexInfo == null) throw new NullReferenceException(nameof(vertexInfo) + " can't ne null");
-            SetLoaded();
+            state.Load();
 
-            ElementCount = vertexInfo.Length;
+            Length = vertexInfo.Length;
             Id = InitializeDataOpenGL(vertexInfo);
         }
 
@@ -46,7 +52,7 @@ namespace SpaceGame.Render.OpenGL
 
         public void Unload()
         {
-            SetUnloaded();
+            state.Unload();
 
             Use();
             GL.DeleteBuffer(Id);
@@ -57,7 +63,7 @@ namespace SpaceGame.Render.OpenGL
         {
             int id = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ArrayBuffer, id);
-            GL.BufferData(BufferTarget.ArrayBuffer, ElementsSize, verticesInfo, BufferUsageHint.StaticDraw);
+            GL.BufferData(BufferTarget.ArrayBuffer, ByteSize, verticesInfo, BufferUsageHint.StaticDraw);
             return id;
         }
     }

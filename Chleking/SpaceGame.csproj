@@ -71,12 +71,13 @@
     <Compile Include="Render\Exceptions\EntityNotLoadedException.cs" />
     <Compile Include="Render\IDrawable.cs" />
     <Compile Include="Render\OpenGL\Shaders\StandartShader.cs" />
+    <Compile Include="Render\OpenGL\VerticesAttributeInfo.cs" />
     <Compile Include="Render\Render3D.cs" />
     <Compile Include="Render\RenderEntity.cs" />
     <Compile Include="Render\OpenGL\Model.cs" />
     <Compile Include="Render\OpenGL\Shaders\Shader.cs" />
     <Compile Include="Render\OpenGL\Shaders\Texture.cs" />
-    <Compile Include="Render\OpenGL\VertexInfo.cs" />
+    <Compile Include="Render\OpenGL\VerticesInfo.cs" />
     <Compile Include="Window.cs" />
   </ItemGroup>
   <ItemGroup>

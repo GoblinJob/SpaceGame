@@ -18,11 +18,11 @@ namespace SpaceGame.Render.OpenGL
         public Model()
         {
         }
-        public VertexInfo VertexInfo { get; private set; }
+        public VerticesInfo VertexInfo { get; private set; }
         public Shader Shader { get; private set; }
 
 
-        public void Load(VertexInfo vertexInfo, Shader shader)
+        public void Load(VerticesInfo vertexInfo, Shader shader)
         {
             SetLoaded();
 

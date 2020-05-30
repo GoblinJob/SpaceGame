@@ -7,12 +7,8 @@ using System.Threading.Tasks;
 
 namespace SpaceGame.Render
 {
-    public abstract class RenderEntity
+    public sealed class RenderEntityState
     {
-        /// <summary>
-        /// Id объекта в рендере.
-        /// </summary>
-        public int Id { get; protected set; }
         /// <summary>
         /// Информация о том, загружен ли объект.
         /// </summary>
@@ -21,7 +17,7 @@ namespace SpaceGame.Render
         /// Загружает в рендер объект.
         /// </summary>
         /// <param name="args">Аргументы для загрузки</param>
-        protected void SetLoaded()
+        public void Load()
         {
             if (IsLoaded) throw new EntityAlreadyLoadException();
             IsLoaded = true;
@@ -29,7 +25,7 @@ namespace SpaceGame.Render
         /// <summary>
         /// Выгружает из рендера объект.
         /// </summary>
-        protected void SetUnloaded()
+        public void Unload()
         {
             if (!IsLoaded) throw new EntityNotLoadedException();
             IsLoaded = false;

@@ -12,7 +12,7 @@ namespace SpaceGame
         [STAThread]
         static void Main()
         {
-            using (var game = new Window(1600, 1600, "Chlekin"))
+            using (var game = new Window(800, 600, "SpaceGame"))
             {
                 // Запуск программы.
                 game.Run(60.0);
