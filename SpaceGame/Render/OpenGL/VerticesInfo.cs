@@ -24,21 +24,23 @@ namespace SpaceGame.Render
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
         }
 
-        public VerticesInfo(int vertexLength, VerticesAttributeInfo[] attributeInfo)
+        public VerticesInfo(VerticesAttributeInfo[] attributeInfo)
         {
-            this.VertexLength = vertexLength;
+            this.RowLength = attributeInfo.Sum(item => item.RowLength);
             this.AttributeInfo = attributeInfo;
         }
 
+        public int RowLength { get; }
         public int Length { get; private set; }
-        public int VertexCount => Length / Length;
-        public int VertexByteSize => Length / Length;
+        public int VerticesCount => Length / RowLength;
         public int ByteSize => Length * sizeof(float);
 
 
         public void Load(float[] vertexInfo)
         {
-            if (vertexInfo == null) throw new NullReferenceException(nameof(vertexInfo) + " can't ne null");
+            if (vertexInfo == null) throw new NullReferenceException(nameof(vertexInfo) + " can't be null");
+            if (vertexInfo.Length % RowLength != 0) throw new ArgumentException(nameof(vertexInfo.Length) + " does not fit in rowSize");
+
             state.Load();
 
             Length = vertexInfo.Length;

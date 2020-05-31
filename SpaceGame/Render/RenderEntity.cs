@@ -1,13 +1,11 @@
 ﻿using Chleking.Render.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SpaceGame.Render
 {
-    public sealed class RenderEntityState
+    /// <summary>
+    /// Переключает состаяние загружен ли объект рендера в рендер.
+    /// </summary>
+    internal sealed class RenderEntityState
     {
         /// <summary>
         /// Информация о том, загружен ли объект.

@@ -1,5 +1,4 @@
-﻿using SpaceGame.Core;
-using SpaceGame.Render;
+﻿using SpaceGame.Render;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,6 +1,4 @@
 ﻿using OpenTK;
-using SpaceGame.Core;
-using SpaceGame.Render.OpenGL;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

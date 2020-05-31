@@ -1,15 +1,9 @@
-﻿using SpaceGame.Core;
-using SpaceGame.Render.OpenGL;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace SpaceGame.Render
 {
     public class Render3D
-    {
+    { 
         public static List<Render3D> AllRenders { get; private set; } = new List<Render3D>();
 
         public Render3D(string modelName, GameObject owner)

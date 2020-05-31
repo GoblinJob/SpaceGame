@@ -2,7 +2,6 @@
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
-using SpaceGame.Core;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -18,13 +17,14 @@ namespace SpaceGame.Render
         public Model()
         {
         }
+        public int Id { get; set; }
         public VerticesInfo VertexInfo { get; private set; }
         public Shader Shader { get; private set; }
-
+        private RenderEntityState state = new RenderEntityState();
 
         public void Load(VerticesInfo vertexInfo, Shader shader)
         {
-            SetLoaded();
+            state.Load();
 
             this.VertexInfo = vertexInfo;
             this.Shader = shader;
@@ -33,7 +33,7 @@ namespace SpaceGame.Render
 
         public void Unload()
         {
-            SetUnloaded();
+            state.Unload();
 
             GL.DeleteVertexArray(Id);
         }
@@ -44,7 +44,7 @@ namespace SpaceGame.Render
             GL.BindVertexArray(Id);
             Shader.Use(objectTransorm, viewer);
 
-            GL.DrawArrays(PrimitiveType.Triangles, 0, VertexInfo.VertexCount);
+            GL.DrawArrays(PrimitiveType.Triangles, 0, VertexInfo.VerticesCount);
         }
 
         private int InitializeOpenGL()
@@ -53,15 +53,17 @@ namespace SpaceGame.Render
             GL.BindVertexArray(id);
             VertexInfo.Use();
 
-            // Инициализация значений позиции.
-            //var positionLocation = movingShader.GetAttribLocation("Position");
-            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
-            GL.EnableVertexAttribArray(0);
+            int stride = 0;
 
-            // Инициализация значений координат текстур.
-            //var texCoordLocation = movingShader.GetAttribLocation("TexCoord");
-            GL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
-            GL.EnableVertexAttribArray(1);
+            foreach (var attributeInfo in VertexInfo.AttributeInfo)
+            {
+                var positionLocation = Shader.GetAttribLocation(attributeInfo.Name);
+                GL.VertexAttribPointer(positionLocation, attributeInfo.RowLength, VertexAttribPointerType.Float, false, VertexInfo.RowLength * sizeof(float), stride * sizeof(float));
+                GL.EnableVertexAttribArray(positionLocation);
+
+                stride += attributeInfo.RowLength;
+            }
+
             return id;
         }
     }

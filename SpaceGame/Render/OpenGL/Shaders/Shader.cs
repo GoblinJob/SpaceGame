@@ -1,7 +1,6 @@
 ﻿using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
-using SpaceGame.Core;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -15,8 +14,10 @@ namespace SpaceGame.Render
     /// <summary>
     /// Шейдер загружаймый в OpenGL.
     /// </summary>
-    public abstract class Shader : RenderEntity
+    public abstract class Shader
     {
+        public int Id { get; private set; }
+        private RenderEntityState state = new RenderEntityState();
         public Shader()
         {
             
@@ -24,7 +25,7 @@ namespace SpaceGame.Render
 
         public virtual void Load(StreamReader vertexShaderFile, StreamReader fragmentShaderFile)
         {
-            SetLoaded();
+            state.Load();
 
             Id = GL.CreateProgram();
 
@@ -57,7 +58,7 @@ namespace SpaceGame.Render
 
         public void Unload()
         {
-            SetUnloaded();
+            state.Unload();
 
             GL.DeleteProgram(Id);
         }
@@ -134,7 +135,7 @@ namespace SpaceGame.Render
         /// <summary>
         /// Получение значения location переменной шейдера по имени.
         /// </summary>
-        protected int GetAttribLocation(string attributName)
+        public int GetAttribLocation(string attributName)
         {
             return GL.GetAttribLocation(Id, attributName);
         }

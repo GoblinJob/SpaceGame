@@ -7,7 +7,7 @@ using OpenTK;
 
 namespace SpaceGame.Collisions
 {
-    class CollisionSystem : IEngineSystem
+    class CollisionSystem
     {
         static CollisionSystem()
         {

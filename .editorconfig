@@ -1,10 +1,4 @@
 ﻿[*.cs]
 
-# CA1819: Свойства не должны возвращать массивы
-dotnet_diagnostic.CA1819.severity = silent
-
-# CA1051: Не объявляйте видимые поля экземпляров
-dotnet_diagnostic.CA1051.severity = none
-
 # CA1303: Не передавать литералы в качестве локализованных параметров
-dotnet_diagnostic.CA1303.severity = none
+dotnet_diagnostic.CA1303.severity = silent

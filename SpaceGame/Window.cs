@@ -1,150 +1,109 @@
-﻿using Chleking.Render.OpenGL;
-using OpenTK;
+﻿using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Input;
-using SpaceGame.Core;
 using SpaceGame.Render;
-using SpaceGame.Render.OpenGL;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 
 namespace SpaceGame
 {
-    public class Window : GameWindow
+    public class SpaceGameWindow : GameWindow
     {
-        public static Matrix4 Projection;
+        private Camera camera;
+        private GameObject box;
+        private GameObject light;
 
+        Vector2 lastPos;
+        private readonly float[] vertices = new float[] {
+             // Позиции вершин  
+            -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,  0.0f,  0.0f, -1.0f,
+             0.5f, -0.5f, -0.5f,  1.0f, 0.0f,  0.0f,  0.0f, -1.0f, 
+             0.5f,  0.5f, -0.5f,  1.0f, 1.0f,  0.0f,  0.0f, -1.0f, 
+             0.5f,  0.5f, -0.5f,  1.0f, 1.0f,  0.0f,  0.0f, -1.0f, 
+            -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,  0.0f,  0.0f, -1.0f, 
+            -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,  0.0f,  0.0f, -1.0f, 
 
-        public Window(int width, int hight, string title) : base(width, hight, GraphicsMode.Default, title)
+            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,  0.0f,  0.0f, 1.0f,
+             0.5f, -0.5f,  0.5f,  1.0f, 0.0f,  0.0f,  0.0f, 1.0f,
+             0.5f,  0.5f,  0.5f,  1.0f, 1.0f,  0.0f,  0.0f, 1.0f,
+             0.5f,  0.5f,  0.5f,  1.0f, 1.0f,  0.0f,  0.0f, 1.0f,
+            -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,  0.0f,  0.0f, 1.0f,
+            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,  0.0f,  0.0f, 1.0f,
+
+            -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, -1.0f,  0.0f,  0.0f,
+            -0.5f,  0.5f, -0.5f,  1.0f, 1.0f, -1.0f,  0.0f,  0.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, -1.0f,  0.0f,  0.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, -1.0f,  0.0f,  0.0f,
+            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, -1.0f,  0.0f,  0.0f,
+            -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, -1.0f,  0.0f,  0.0f,
+
+             0.5f,  0.5f,  0.5f,  1.0f, 0.0f,  1.0f,  0.0f,  0.0f,
+             0.5f,  0.5f, -0.5f,  1.0f, 1.0f,  1.0f,  0.0f,  0.0f,
+             0.5f, -0.5f, -0.5f,  0.0f, 1.0f,  1.0f,  0.0f,  0.0f,
+             0.5f, -0.5f, -0.5f,  0.0f, 1.0f,  1.0f,  0.0f,  0.0f,
+             0.5f, -0.5f,  0.5f,  0.0f, 0.0f,  1.0f,  0.0f,  0.0f,
+             0.5f,  0.5f,  0.5f,  1.0f, 0.0f,  1.0f,  0.0f,  0.0f,
+
+            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,  0.0f, -1.0f,  0.0f,
+             0.5f, -0.5f, -0.5f,  1.0f, 1.0f,  0.0f, -1.0f,  0.0f,
+             0.5f, -0.5f,  0.5f,  1.0f, 0.0f,  0.0f, -1.0f,  0.0f,
+             0.5f, -0.5f,  0.5f,  1.0f, 0.0f,  0.0f, -1.0f,  0.0f,
+            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,  0.0f, -1.0f,  0.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,  0.0f, -1.0f,  0.0f,
+
+            -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,  0.0f,  1.0f,  0.0f,
+             0.5f,  0.5f, -0.5f,  1.0f, 1.0f,  0.0f,  1.0f,  0.0f,
+             0.5f,  0.5f,  0.5f,  1.0f, 0.0f,  0.0f,  1.0f,  0.0f,
+             0.5f,  0.5f,  0.5f,  1.0f, 0.0f,  0.0f,  1.0f,  0.0f,
+            -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,  0.0f,  1.0f,  0.0f,
+            -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,  0.0f,  1.0f,  0.0f
+        };
+
+        public SpaceGameWindow(int width, int hight, string title) : base(width, hight, GraphicsMode.Default, title)
         {
         }
 
 
-        private Camera camera;
-
-        private readonly float[] vertices = new float[] {
-             // Позиции вершин  
-            -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-             0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-             0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-             0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-            -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-            -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-
-            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-             0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-             0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-             0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-            -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-
-            -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-            -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-            -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-             0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-             0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-             0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-             0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-             0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-             0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-             0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-             0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-             0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-            -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-             0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-             0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-             0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-            -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-            -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-        };
-
-        private readonly float[] vertices2 = new float[] {
-             // Позиции вершин  
-            -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-             0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-             0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-             0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-            -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-            -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-
-            0.5f, -0.5f, 0.0f, 1.0f, -1.0f,
-            0.5f, 0.5f, 0.0f, 1.0f, 1.0f,
-            0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-
-            0.5f, 0.5f, 0.0f, 1.0f, -1.0f,
-            -0.5f, 0.5f, 0.0f, 1.0f, 1.0f,
-            0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-
-            -0.5f, 0.5f, 0.0f, 1.0f, -1.0f,
-            -0.5f, -0.5f, 0.0f, 1.0f, 1.0f,
-            0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-
-            -0.5f, -0.5f, 0.0f, 1.0f, -1.0f,
-            0.5f, -0.5f, 0.0f, 1.0f, 1.0f,
-            0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-        };
-
-        Vector2 lastPos;
         protected override void OnLoad(EventArgs e)
         {
             GL.ClearColor(Color4.Black);
             GL.Enable(EnableCap.DepthTest);
             CursorVisible = false;
 
-            //ResurceManager.LoadTexture( "goblin", @"..\..\Assets\goblin.jpg");
-            //Texture.CreateTexture("spaceBlue", @"..\..\Assets\spaceBlue.jpg");
-            //Texture.CreateTexture("meteor", @"..\..\Assets\meteor.jpg");
-            //Texture.CreateTexture("lava", @"..\..\Assets\lava.png");
-            //Texture.CreateTexture("space", @"..\..\Assets\space.png");
-            //Texture.CreateTexture("box", @"..\..\Assets\box.jpg");
-            //Texture.CreateTexture("betterGoblin", @"..\..\Assets\betterGoblin.png");
-            //Texture.CreateTexture("Gorinich", @"..\..\Assets\Gorinich.png");
-            //Texture.CreateTexture("moveIcon", @"..\..\Assets\moveIcon.png");
-            //Texture.CreateTexture("spaceSamir", @"..\..\Assets\spaceSamir.png");
-            //Texture.CreateTexture("realSamir", @"..\..\Assets\realSamir.jpg");
-            //Texture.CreateTexture("BrainSamir", @"..\..\Assets\BrainSamir.png");
-            //Texture.CreateTexture("CollSam", @"..\..\Assets\CollSam.png");
-            //Shader.CreateShader("standart", @"..\..\Render\OpenGL\Shaders\Transform.vert", @"..\..\Render\OpenGL\Shaders\textureLight.frag");
-            //Shader.CreateShader("light", @"..\..\Render\OpenGL\Shaders\Transform.vert", @"..\..\Render\OpenGL\Shaders\light.frag");
-            //VertexInfo.CreateModel("cube", vertices);
+            ResurceManager.LoadTexture("box", 
+                new Texture(), @"..\..\Assets\box.jpg");
+            ResurceManager.LoadTexture("lava", 
+                new Texture(), @"..\..\Assets\lava.png");
 
+            ResurceManager.LoadVertexInfo("cube", 
+                new VerticesInfo(new VerticesAttributeInfo[] {
+                    new VerticesAttributeInfo("v_position", 3), 
+                    new VerticesAttributeInfo("v_textureCoord", 2), 
+                    new VerticesAttributeInfo("v_normal", 3)
+                }), vertices);
 
-            ResurceManager.LoadTexture("goblin", new Texture(), @"..\..\Assets\goblin.jpg");
-            ResurceManager.LoadVertexInfo("cube", new VerticesInfo(), vertices);
-            ResurceManager.LoadShader("light", new StandartShader(ResurceManager.GetTexture("goblin")), @"..\..\Render\OpenGL\Shaders\Source\transform.vert", @"..\..\Render\OpenGL\Shaders\Source\light.frag");
-            ResurceManager.LoadShader("standart", new StandartShader(ResurceManager.GetTexture("goblin")), @"..\..\Render\OpenGL\Shaders\Source\transform.vert", @"..\..\Render\OpenGL\Shaders\Source\texturesAndLight.frag");
-            ResurceManager.LoadModel("lightBlock", new Model(), "cube", "light");
-            ResurceManager.LoadModel("goblinBlock", new Model(), "cube", "standart");
+            ResurceManager.LoadShader("lightSource",
+                new LightSourceShader(ResurceManager.GetTexture("lava"), 
+                new Vector3(1, 0.6471f, 0)), 
+                @"..\..\Render\OpenGL\Shaders\Source\Vertex\transform.vert", 
+                @"..\..\Render\OpenGL\Shaders\Source\Fragment\lightSource.frag");
+            ResurceManager.LoadShader("lightTaker", 
+                new LightTakerShader(ResurceManager.GetTexture("box"), 
+                    (LightSourceShader)ResurceManager.GetShader("lightSource"),
+                    new Vector3(0.4f, 0.4f, 0.4f)),
+                @"..\..\Render\OpenGL\Shaders\Source\Vertex\transform.vert",
+                @"..\..\Render\OpenGL\Shaders\Source\Fragment\lightTaker.frag");
+
+            ResurceManager.LoadModel("WoodBox",
+                new Model(), "cube", "lightTaker");
+            ResurceManager.LoadModel("LavaBox",
+                new Model(), "cube", "lightSource");
 
             camera = new Camera(90, 100, Height, Width);
-            _ = new GameObject(new Transform(new Vector3(-0.5f, -2f, -4f)), "lightBlock");
-            _ = new GameObject(new Transform(new Vector3(0, 0, -2f)), "goblinBlock");
-
-            //CreateRandomCoolCubes("cube", "spaceBlue", 50, -70, -60, 20);
-            //CreateRandomCoolCubes("cube", "lava", 50, -60, -50, 20);
-            //CreateRandomCoolCubes("cube", "goblin", 50, -50, -40, 20);
-            //CreateRandomCoolCubes("cube", "space", 50, -40, -30, 20);
-            //CreateRandomCoolCubes("cube", "CollSam", 50, -30, -20, 20);
-            //CreateRandomCoolCubes("cube", "Gorinich", 50, -20, -10, 20);
-            //CreateRandomCoolCubes("cube", "moveIcon", 50, -10, 0, 20);
-            //CreateRandomCoolCubes("cube", "spaceSamir", 50, 0, 10, 20);
-            //CreateRandomCoolCubes("cube", "realSamir", 50, 10, 20, 20);
-            //CreateRandomCoolCubes("cube", "BrainSamir", 50, 20, 30, 20);
-            //CreateRandomCoolCubes("cube", "meteor", 50, 30, 40, 20);
-            //CreateRandomCoolCubes("cube", "box", 50, 40, 50, 20);
-            //CreateRandomCoolCubes("cube", "goblin", 50, 50, 60, 20);
-            //CreateRandomCoolCubes("cube", "betterGoblin", 50, 60, 70, 20);
+            box = new GameObject(new Transform(new Vector3(0, 0f, -4f)), "WoodBox");
+            light = new GameObject(new Transform(new Vector3(4, 2, -2f)), "LavaBox");
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
@@ -169,15 +128,6 @@ namespace SpaceGame
             base.OnUpdateFrame(e);
         }
 
-        protected override void OnMouseMove(MouseMoveEventArgs e)
-        {
-            //if (Focused) // check to see if the window is focused  
-            //{
-            //    Mouse.SetPosition(X + Width / 2f, Y + Height / 2f);
-            //}
-
-            base.OnMouseMove(e);
-        }
         protected override void OnResize(EventArgs e)
         {
             GL.Viewport(0, 0, Width, Height);
@@ -249,6 +199,15 @@ namespace SpaceGame
         {
             var input = Keyboard.GetState();
 
+            if (input.IsKeyDown(Key.Q))
+            {
+                 box.Transform.position += new Vector3(speed * deltaTime, 0, 0); //Forward 
+            }
+
+            if (input.IsKeyDown(Key.E))
+            {
+                box.Transform.position -= new Vector3(speed * deltaTime, 0, 0); //Forward 
+            }
 
             if (input.IsKeyDown(Key.W))
             {
@@ -281,34 +240,5 @@ namespace SpaceGame
                 camera.Transform.position -= camera.Up * speed * deltaTime;
             }
         }
-
-
-
-        // TODO: Random generation.
-        //private GameObject[] CreateRandomCoolCubes(string modelName, string shaderName, string textureName, int count, int minSpawnCoordZ, int maxSpawnCoordZ, int maxSpawnCoordXY)
-        //{
-        //    var random = new Random();
-        //    var resault = new GameObject[count];
-        //    for (int i = 0; i < count; i++)
-        //    {
-        //        var randomTransform = new Transform();
-
-        //        randomTransform.position.X = (float)random.NextDouble() + random.Next(-maxSpawnCoordXY, maxSpawnCoordXY);
-        //        randomTransform.position.Y = (float)random.NextDouble() + random.Next(-maxSpawnCoordXY, maxSpawnCoordXY);
-        //        randomTransform.position.Z = (float)random.NextDouble() + random.Next(minSpawnCoordZ, maxSpawnCoordZ);
-
-        //        randomTransform.rotation.X = (float)random.Next(0, 360);
-        //        randomTransform.rotation.Y = (float)random.Next(0, 360);
-        //        randomTransform.rotation.Z = (float)random.Next(0, 360);
-
-        //        var randomScale = (float)(random.NextDouble() + 1);
-        //        randomTransform.scale.X = randomScale;
-        //        randomTransform.scale.Y = randomScale;
-        //        randomTransform.scale.Z = randomScale;
-
-        //        resault[i] = new GameObject(randomTransform, shaderName, modelName, textureName);
-        //    }
-        //    return resault;
-        //}
     }
 }

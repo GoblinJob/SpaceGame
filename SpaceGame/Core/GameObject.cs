@@ -1,4 +1,5 @@
-﻿using OpenTK;
+﻿using Chleking.Core;
+using OpenTK;
 using SpaceGame.Collisions;
 using SpaceGame.Render;
 using System;
@@ -11,6 +12,7 @@ namespace SpaceGame
 {
     public class GameObject
     {
+        private Component Component { get; set; }
         public GameObject(Transform transform)
         {
             Transform = transform;

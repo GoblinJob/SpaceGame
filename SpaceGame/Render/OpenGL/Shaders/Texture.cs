@@ -16,8 +16,10 @@ namespace SpaceGame.Render
     /// Двумерная текстура, взаимодействующая с OpenGL.
     /// Cпособно отображать RGBA цвета.
     /// </summary>
-    public class Texture : RenderEntity
+    public class Texture
     {
+        public int Id { get; private set; }
+        private RenderEntityState state = new RenderEntityState();
         public Texture()
         {
         }
@@ -25,7 +27,7 @@ namespace SpaceGame.Render
 
         public void Load(Bitmap image)
         {
-            SetLoaded();
+            state.Load();
 
             // Создаем текстуру в памяти OpenGL.
             Id = GL.GenTexture();
@@ -58,7 +60,7 @@ namespace SpaceGame.Render
 
         public void Unload()
         {
-            SetUnloaded();
+            state.Unload();
 
             GL.DeleteTexture(Id);
         }

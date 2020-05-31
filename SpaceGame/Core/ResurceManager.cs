@@ -1,4 +1,4 @@
-﻿using SpaceGame.Render.OpenGL;
+﻿using SpaceGame.Render;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

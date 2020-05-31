@@ -9,14 +9,14 @@ namespace SpaceGame.Render
     public class VerticesAttributeInfo
     {
         public string Name { get; }
-        public int RowSize { get; }
-        public VerticesAttributeInfo(string name, int rowSize)
+        public int RowLength { get; }
+        public VerticesAttributeInfo(string name, int rowLenght)
         {
-            if (rowSize >= 0)
+            if (rowLenght <= 0)
                 throw new ArgumentOutOfRangeException("rowSize can't be smaller then 1");
             
             this.Name = name;
-            this.RowSize = rowSize;
+            this.RowLength = rowLenght;
         }
     }
 }
