@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace ECS
 {
-    public abstract class Manager<T> where T : new()
+    public class ComponentManager
     {
-        protected T[] storage;
-        public Manager(int maxElementCount)
+        private Component[] storage;
+        public ComponentManager(int storegeSize)
         {
-            storage = new T[maxElementCount];
+            storage = new Component[storegeSize];
         }
 
-        public int Create()
+        public int CreateComponent<T>() where T : Component, new()
         {
             int i = 0;
             while (storage[i] != null)
@@ -27,13 +27,12 @@ namespace ECS
             return i;
         }
 
-        public T Get(int i)
+        public T GetComponent<T>(int i) where T : Component
         {
-            
-            return storage[i];
+            return (T)storage[i];
         }
 
-        public void Destroy(int i)
+        public void DestroyComponent(int i)
         {
             storage[i] = null;
         }

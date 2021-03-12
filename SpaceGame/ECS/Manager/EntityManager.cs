@@ -1,25 +1,22 @@
-﻿using System;
+﻿using Chleking.Core;
+using ECS;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ECS
+namespace Game.ECS
 {
-    public class ComponentStorage
+    public class EntityManager
     {
-        public Component[] storage;
-        public ComponentStorage(int maxElementCount)
+        private Entity[] storage;
+        public EntityManager(int storegeSize)
         {
-            storage = new Component[maxElementCount];
+            storage = new Entity[storegeSize];
         }
 
-        public T CreateCompoennt<T>() where T : Component, new()
-        {
-            return new T();
-        }
-
-        public int CreateEnitiy()
+        public int CreateEntity()
         {
             int i = 0;
             while (storage[i] != null)
@@ -32,12 +29,13 @@ namespace ECS
             return i;
         }
 
-        public Entity GetEnity(int i)
+        public Entity GetEntity(int i)
         {
+
             return storage[i];
         }
 
-        public void DstroyEnity(int i)
+        public void Destroy(int i)
         {
             storage[i] = null;
         }
